@@ -5,6 +5,7 @@ import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
+import Fixtures from "./components/Fixtures";
 
 export default function App() {
   const router=createBrowserRouter(
@@ -15,6 +16,7 @@ export default function App() {
        <Route path="login" element={<Login />} />
        <Route  path="/dashboard" element={<Dashboard/>}/>
        <Route path="/profile" element={<Profile />} />
+       <Route path="/fixtures" element={<Fixtures/>}/>
 
 
 

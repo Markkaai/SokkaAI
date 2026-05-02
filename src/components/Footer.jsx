@@ -9,28 +9,17 @@ export default function Footer() {
         {/* Logo & Description */}
         <div>
           <h2 className="text-2xl font-bold mb-2">
-            <span className="text-blue-400">Sokka</span>
-            <span className="text-purple-400">AI</span>
+            <span className="text-blue-400">EPL</span>
+            <span className="text-purple-400 text-sm">PREDICTOR</span>
           </h2>
-          <p className="text-slate-400 text-sm leading-relaxed">
-            Your intelligent AI assistant. Powered by cutting-edge technology to help you work smarter.
-          </p>
+          <p className="text-slate-400 mt-6 max-w-2xl text-sm leading-relaxed">
+          Leverage elite machine learning models and deep historical data
+          to predict match outcomes with unprecedented accuracy. Join the 0.1% of top-tier analysts.
+        </p>
         </div>
 
-        {/* Quick Links */}
-        <div>
-          <h3 className="text-blue-400 font-semibold mb-4">Quick Links</h3>
-          <div className="flex flex-col gap-2">
-            {["Home", "Services", "Contact Us", "Dashboard"].map((link) => (
-              <Link
-                key={link}
-                className="text-slate-400 text-sm hover:text-blue-400 transition-colors duration-200 w-fit"
-              >
-                {link}
-              </Link>
-            ))}
-          </div>
-        </div>
+       
+       
 
         {/* Contact */}
         <div>

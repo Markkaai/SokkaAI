@@ -1,3 +1,4 @@
+import Fixtures from "../components/Fixtures";
 import Hero from "../components/Hero";
 import Navbar from "../components/Navbar";
 import Reviews from "../components/Reveiws";
@@ -7,6 +8,7 @@ export default function Home() {
         <section>
             <Navbar />
             <Hero/>
+            <Fixtures/>
             <Reviews/>
         </section>
     );
