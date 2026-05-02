@@ -33,10 +33,11 @@ export default function Login() {
         const payload = {
           email: formData.email,
           password: formData.password,
+          full_name: formData.name || undefined
         };
       
         if (formData.name) {
-          payload.name = formData.name;
+          
         }
 
         const response = await fetch("https://elliott888-epl-model.hf.space/register", {

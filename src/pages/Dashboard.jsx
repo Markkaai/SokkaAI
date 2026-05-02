@@ -1,5 +1,7 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState,useEffect } from "react";
+import { data, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 
 const stats = [
   { label: "Total Queries", value: "1,284", change: "+12%", color: "blue" },
@@ -33,6 +35,49 @@ const colorMap = {
 export default function Dashboard() {
   const [activeNav, setActiveNav] = useState("Dashboard");
   const [message, setMessage] = useState("");
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+  const avatarUrl = `https://api.dicebear.com/7.x/identicon/svg?seed=${user?.email}`;
+
+  const handleLogout = () => {
+  localStorage.removeItem("token");
+  
+  localStorage.clear();
+
+  navigate("/login");
+};
+
+useEffect(() => {
+  const fetchUser = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+      navigate("/");
+      return null;
+    }
+
+      const res = await fetch("https://elliott888-epl-model.hf.space/user", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || "Failed to fetch user");
+
+      console.log("User:", data);
+      setUser(data);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
+  fetchUser();
+}, []);
+
 
   const navItems = ["Dashboard", "Chats", "Analytics", "Settings"];
 
@@ -70,16 +115,26 @@ export default function Dashboard() {
 
         {/* User */}
         <div className="mt-auto border-t border-slate-700 pt-4">
-          <div className="flex items-center gap-3 px-2">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 
+          <div className="flex items-center gap-3 px-2" onClick={() => navigate("/profile")} style={{ cursor: "pointer" }}>
+            <div className="w-9 h-9
                             flex items-center justify-center text-sm font-bold">
-              S
+              <img
+  src={avatarUrl}
+  alt="avatar"
+  className="w-10 h-10 rounded-full"
+/>
             </div>
             <div>
-              <p className="text-sm font-medium">Sokka User</p>
-              <p className="text-xs text-slate-500">sokka@email.com</p>
+              <p className="text-sm text-slate-300 font-medium">{user?user.full_name: "loading..."}</p>
+              <p className="text-xs text-slate-500">{user?user.email: "loading..."}</p>
             </div>
           </div>
+          <button
+  onClick={handleLogout}
+  className="text-red-400 hover:text-red-300 mt-5 ml-4 bg-red-600/20 hover:bg-red-600/30 px-3 py-2 rounded-lg text-sm transition-all duration-300"
+>
+  Logout
+</button>
         </div>
       </div>
 
@@ -89,12 +144,16 @@ export default function Dashboard() {
         {/* Top Bar */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-2xl font-bold">Welcome back 👋</h2>
+            <h2 className="text-2xl font-bold">Welcome back</h2>
             <p className="text-slate-400 text-sm mt-1">Here's what's happening today</p>
           </div>
-          <div className="w-9 h-9 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 
+          <div onClick={()=>navigate("/profile")} className="w-9 h-9
                           flex items-center justify-center font-bold cursor-pointer">
-            S
+            <img
+  src={avatarUrl}
+  alt="avatar"
+  className="w-10 h-10 rounded-full"
+/>
           </div>
         </div>
 
