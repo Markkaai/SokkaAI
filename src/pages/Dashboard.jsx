@@ -260,7 +260,7 @@ export default function Dashboard() {
       {/* Main Content */}
       <div className="bg-black/40 ml-[20vw] flex-1 lg:ml-64 px-4 lg:px-6 py-8 pt-18">
         {/* Top Bar */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-3">
           <div>
             <h2 className="text-3xl font-bold">Upcoming Matchweek</h2>
             <p className="text-slate-400 text-lg mt-1">
