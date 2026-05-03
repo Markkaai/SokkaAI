@@ -25,24 +25,13 @@ export default function Footer() {
         <div>
           <h3 className="text-blue-400 font-semibold mb-4">Contact</h3>
           <div className="flex flex-col gap-2 text-slate-400 text-sm">
-            <p>📧 support@sokkaai.com</p>
+            <p>📧 support@eplpredictor.com</p>
             <p>📍 Nairobi, Kenya</p>
             <p>🕐 Mon - Fri, 9am - 6pm</p>
           </div>
 
-          {/* Socials */}
-          <div className="flex gap-3 mt-4">
-            {["𝕏", "in", "f"].map((icon) => (
-              <button
-                key={icon}
-                className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500
-                           flex items-center justify-center text-xs font-bold
-                           hover:scale-110 transition-all duration-300 active:scale-95"
-              >
-                {icon}
-              </button>
-            ))}
-          </div>
+          
+          
         </div>
 
       </div>
@@ -50,7 +39,7 @@ export default function Footer() {
       {/* Bottom Bar */}
       <div className="max-w-6xl mx-auto mt-10 pt-6 border-t border-slate-800 
                       flex flex-col md:flex-row items-center justify-between gap-2">
-        <p className="text-slate-500 text-xs">© 2026 SokkaAI. All rights reserved.</p>
+        <p className="text-slate-500 text-xs">© 2026 EplPredictor. All rights reserved.</p>
         <div className="flex gap-4">
           {["Privacy Policy", "Terms of Service"].map((item) => (
             <Link

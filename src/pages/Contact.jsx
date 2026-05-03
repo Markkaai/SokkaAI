@@ -17,7 +17,7 @@ export default function Contact() {
   };
 
   const contactInfo = [
-    { icon: "📧", label: "Email", value: "support@sokkaai.com" },
+    { icon: "📧", label: "Email", value: "support@eplpredictor.com" },
     { icon: "📍", label: "Location", value: "Nairobi, Kenya" },
     { icon: "🕐", label: "Working Hours", value: "Mon - Fri, 9am - 6pm" },
   ];
@@ -83,24 +83,6 @@ export default function Contact() {
             </div>
           ))}
 
-          {/* Socials */}
-          <div className="bg-black/40 backdrop-blur-md border border-purple-500/20 
-                          rounded-xl px-6 py-5">
-            <p className="text-slate-400 text-sm mb-4">Follow us on</p>
-            <div className="flex gap-3">
-              {socials.map((s) => (
-                <button
-                  key={s.label}
-                  className="w-10 h-10 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 
-                             flex items-center justify-center font-bold text-sm
-                             hover:scale-110 hover:shadow-lg hover:shadow-blue-500/30 
-                             transition-all duration-300 active:scale-95"
-                >
-                  {s.icon}
-                </button>
-              ))}
-            </div>
-          </div>
 
         </div>
 
