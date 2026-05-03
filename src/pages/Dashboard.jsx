@@ -52,7 +52,7 @@ export default function Dashboard() {
 
   return (
     
-    <div className="min-h-screen bg-slate-950 text-white pt-20 pb-10 flex flex-col lg:flex-row">
+    <div className="fixed inset-0 bg-slate-950 text-white overflow-y-auto flex flex-col lg:flex-row z-50">
       
       {/* Sidebar */}
       <aside className="hidden lg:flex flex-col w-64 bg-slate-900/50 border-r border-slate-800 p-6 fixed h-full">
