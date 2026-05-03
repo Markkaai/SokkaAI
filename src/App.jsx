@@ -6,6 +6,8 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Fixtures from "./components/Fixtures";
+import AdminDashboard from "./pages/Adminboard";
+import Leaderboard from "./pages/Leaderboard";
 
 export default function App() {
   const router=createBrowserRouter(
@@ -17,6 +19,9 @@ export default function App() {
        <Route  path="/dashboard" element={<Dashboard/>}/>
        <Route path="/profile" element={<Profile />} />
        <Route path="/fixtures" element={<Fixtures/>}/>
+       <Route path="/admin" element={<AdminDashboard/>}/>
+       <Route path="/board" element={<Leaderboard/>}/>
+
 
 
 
