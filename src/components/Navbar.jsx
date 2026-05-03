@@ -4,7 +4,11 @@ import { Link, useNavigate } from "react-router-dom";
 export default function Navbar() {
   const navigate = useNavigate();
   return (
+<<<<<<< HEAD
     <div className="flex flex-row justify-between items-center mt-2 bg-black/40 px-4 py-2 
+=======
+    <div className="flex flex-row justify-between items-center bg-black/40 px-4 py-2 
+>>>>>>> 83451b7 (break)
                sm:backdrop-blur-lg rounded-lg border border-blue-500/40 w-11/12 mx-auto lg:w-1/2">
       
       {/* Logo */}

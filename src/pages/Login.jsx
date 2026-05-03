@@ -1,18 +1,124 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+<<<<<<< HEAD
+=======
+import Footer from "../components/Footer";
+>>>>>>> 83451b7 (break)
 
 export default function Login() {
   const [focusedInput, setFocusedInput] = useState(null);
   const [isSignup, setIsSignup] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", password: "", confirm: "" });
+<<<<<<< HEAD
+=======
+  const [loading, setLoading] = useState(false);
+>>>>>>> 83451b7 (break)
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+<<<<<<< HEAD
   const handleSubmit = () => {
     navigate("/dashboard");
+=======
+  const handleSubmit = async () => {
+    setLoading(true);
+    
+    try {
+      // Validation
+      if (isSignup && formData.password !== formData.confirm) {
+        alert("Passwords do not match");
+        setLoading(false);
+        return;
+      }
+      
+      if (!formData.email || !formData.password) {
+        alert("Fill all required fields");
+        setLoading(false);
+        return;
+      }
+
+      if (isSignup) {
+        const payload = {
+          email: formData.email,
+          password: formData.password,
+          full_name: formData.name || undefined
+        };
+      
+        if (formData.name) {
+          
+        }
+
+        const response = await fetch("https://elliott888-epl-model.hf.space/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || data.detail || "Registration failed");
+        }
+
+        console.log("Registration success:", data);
+        alert("Registration successful! Please login.");
+        setIsSignup(false); 
+        setFormData({ ...formData, password: "", confirm: "" }); 
+        
+      } else {
+        const formBody = new URLSearchParams();
+        formBody.append("username", formData.email);  // Use email as username
+        formBody.append("password", formData.password);
+
+        const response = await fetch("https://elliott888-epl-model.hf.space/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: formBody,
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.detail || data.message || "Login failed");
+        }
+
+        // Store the token
+        if (data.access_token) {
+          localStorage.setItem("token", data.access_token);
+          localStorage.setItem("token_type", data.token_type || "bearer");
+          console.log("Login success, token stored");
+          navigate("/dashboard");
+        } else {
+          throw new Error("No access token received");
+        }
+        
+      }
+      
+    } catch (error) {
+      console.error("Error:", error);
+      
+      
+      let errorMessage = error.message;
+      if (error.message.includes("EMAIL_ALREADY_REGISTERED")) {
+        errorMessage = "Email already registered. Please login instead.";
+      } else if (error.message.includes("Incorrect")) {
+        errorMessage = "Invalid email or password";
+      } else if (error.message.includes("INTERNAL_SERVER_ERROR")) {
+        errorMessage = "Server error. The login endpoint is currently being fixed by the API owner. Please try again later or use registration for now.";
+      }
+      
+      alert(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+>>>>>>> 83451b7 (break)
   };
 
   const fields = isSignup
@@ -28,8 +134,13 @@ export default function Login() {
       ];
 
   return (
+<<<<<<< HEAD
     <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4">
       <div className="w-full max-w-md bg-black/60 backdrop-blur-md border border-blue-500/30 
+=======
+    <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center px-4">
+      <div className="mb-10 w-full max-w-md bg-black/60 backdrop-blur-md border border-blue-500/30 
+>>>>>>> 83451b7 (break)
                       rounded-2xl px-8 py-10 shadow-2xl shadow-blue-500/10 animate-fade-in">
 
         {/* Logo */}
@@ -99,6 +210,7 @@ export default function Login() {
           {/* Submit Button */}
           <button
             onClick={handleSubmit}
+<<<<<<< HEAD
             className="w-full py-3 rounded-lg font-semibold text-white mt-2
                        bg-gradient-to-r from-blue-500 to-purple-500
                        hover:from-blue-600 hover:to-purple-600
@@ -106,6 +218,16 @@ export default function Login() {
                        active:scale-95"
           >
             {isSignup ? "Create Account 🚀" : "Login"}
+=======
+            disabled={loading}
+            className={`w-full py-3 rounded-lg font-semibold text-white mt-2
+                       bg-gradient-to-r from-blue-500 to-purple-500
+                       hover:from-blue-600 hover:to-purple-600
+                       transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/40
+                       active:scale-95 ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+          >
+            {loading ? "Processing..." : (isSignup ? "Create Account" : "Login")}
+>>>>>>> 83451b7 (break)
           </button>
 
           {/* Divider */}
@@ -128,6 +250,12 @@ export default function Login() {
 
         </div>
       </div>
+<<<<<<< HEAD
     </div>
+=======
+      <Footer/>
+    </div>
+    
+>>>>>>> 83451b7 (break)
   );
 }
