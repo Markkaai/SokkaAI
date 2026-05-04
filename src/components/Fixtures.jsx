@@ -9,25 +9,30 @@ export default function Fixtures() {
   const [error, setError]           = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
 
-  const fetchFixtures = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`${BASE_URL}/predictions?skip=0&limit=20`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
-      const data = await res.json();
-      const items = Array.isArray(data) ? data : data.items ?? [];
-      setFixtures(items);
-      setLastUpdated(new Date().toLocaleTimeString());
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+ const fetchFixtures = async () => {
+  setLoading(true);
+  setError(null);
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) { navigate("/login"); return; }
+
+    const res = await fetch(`${BASE_URL}/predictions?skip=0&limit=20`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (res.status === 401) { navigate("/login"); return; }
+    if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+
+    const data = await res.json();
+    const items = Array.isArray(data) ? data : data.items ?? [];
+    setFixtures(items);
+    setLastUpdated(new Date().toLocaleTimeString());
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     fetchFixtures();
@@ -114,7 +119,6 @@ export default function Fixtures() {
       {/* Empty state */}
       {!loading && !error && fixtures.length === 0 && (
         <div className="flex flex-col items-center justify-center py-16 text-center">
-          <span className="text-4xl mb-3">⚽</span>
           <p className="text-slate-400 font-medium">No fixtures available.</p>
           <p className="text-slate-600 text-sm mt-1">Check back once predictions have been generated.</p>
         </div>
@@ -148,9 +152,7 @@ export default function Fixtures() {
                     <div className="flex items-center gap-4">
                       {/* Home */}
                       <div className="flex items-center gap-2">
-                        {match.home_team_logo && (
-                          <img src={match.home_team_logo} alt={match.home_team} className="w-6 h-6 object-contain" />
-                        )}
+                        
                         <span className="text-white font-semibold text-lg">{match.home_team ?? "TBD"}</span>
                       </div>
 
@@ -158,9 +160,7 @@ export default function Fixtures() {
 
                       {/* Away */}
                       <div className="flex items-center gap-2">
-                        {match.away_team_logo && (
-                          <img src={match.away_team_logo} alt={match.away_team} className="w-6 h-6 object-contain" />
-                        )}
+                
                         <span className="text-white font-semibold text-lg">{match.away_team ?? "TBD"}</span>
                       </div>
                     </div>

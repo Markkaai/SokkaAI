@@ -1,14 +1,13 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Leaderboard from "./Leaderboard.jsx";
 import {
-  LayoutDashboard, TrendingUpDown, History, Send, RefreshCw,
-  Bell, LogOut, Trophy, ChevronRight, AlertCircle, Bot, User,
+  LayoutDashboard, TrendingUpDown, History, RefreshCw,
+  Bell, LogOut, Trophy, ChevronRight,
   Zap, BarChart2, Clock, Shield, Star
 } from "lucide-react";
 
-const BASE_URL     = "https://elliott888-epl-model.hf.space";
-const CLAUDE_URL   = "https://api.anthropic.com/v1/messages";
-const CLAUDE_MODEL = "claude-sonnet-4-20250514";
+const BASE_URL = "https://elliott888-epl-model.hf.space";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const formatDate = (d) => {
@@ -33,21 +32,30 @@ const outcomeColor = (o) => {
   return "text-purple-400";
 };
 
-const pct = (v) => (v != null ? `${(v * 100).toFixed(1)}%` : "—");
+const pct = (v) => {
+  if (v == null) return "—";
+  const val = v > 1 ? v : v * 100;
+  return `${val.toFixed(1)}%`;
+};
 
-// Probability bar
+const confPct = (v) => {
+  if (v == null) return null;
+  return v > 1 ? Math.round(v) : Math.round(v * 100);
+};
+
+// ─── Probability bar ──────────────────────────────────────────────────────────
 function ProbBar({ home, draw, away }) {
   const h = ((home ?? 0) * 100).toFixed(0);
   const d = ((draw ?? 0) * 100).toFixed(0);
   const a = ((away ?? 0) * 100).toFixed(0);
   return (
-    <div className="mt-3 h-screen">
+    <div className="mt-3">
       <div className="flex h-2 rounded-full overflow-hidden gap-0.5">
         <div style={{ width: `${h}%` }} className="bg-blue-500 rounded-full" />
         <div style={{ width: `${d}%` }} className="bg-yellow-500 rounded-full" />
         <div style={{ width: `${a}%` }} className="bg-purple-500 rounded-full" />
       </div>
-      <div className="flex justify-between mt-1 text-[9px] font-bold text-slate-500 uppercase tracking-widest">
+      <div className="flex justify-between mt-1 text-[9px] font-bold uppercase tracking-widest">
         <span className="text-blue-400">H {h}%</span>
         <span className="text-yellow-400">D {d}%</span>
         <span className="text-purple-400">A {a}%</span>
@@ -64,81 +72,6 @@ const navItems = [
   { name: "History",     icon: <History         size={18} /> },
 ];
 
-// ─── Standings builder ────────────────────────────────────────────────────────
-function buildStandings(matches) {
-  const t = {};
-  matches.forEach((m) => {
-    const home   = m.home_team;
-    const away   = m.away_team;
-    let   result = m.result ?? m.outcome ?? null;
-    if (!home || !away) return;
-    if (typeof result === "string") {
-      const r = result.toUpperCase();
-      result = r === "HOME" || r === "HOME WIN" ? "H"
-             : r === "AWAY" || r === "AWAY WIN" ? "A"
-             : r === "DRAW" ? "D" : r;
-    }
-    const hg = Number(m.home_goals ?? m.home_score ?? 0);
-    const ag = Number(m.away_goals ?? m.away_score ?? 0);
-    if (!result && hg !== null) result = hg > ag ? "H" : hg < ag ? "A" : "D";
-    if (!["H","D","A"].includes(result)) return;
-
-    [home, away].forEach((team) => {
-      if (!t[team]) t[team] = { team, played:0, won:0, drawn:0, lost:0, gf:0, ga:0, points:0, form:[] };
-    });
-    t[home].played++; t[home].gf += hg; t[home].ga += ag;
-    t[away].played++; t[away].gf += ag; t[away].ga += hg;
-    if (result === "H") {
-      t[home].won++; t[home].points += 3; t[home].form.push("W");
-      t[away].lost++;                     t[away].form.push("L");
-    } else if (result === "D") {
-      t[home].drawn++; t[home].points += 1; t[home].form.push("D");
-      t[away].drawn++; t[away].points += 1; t[away].form.push("D");
-    } else {
-      t[home].lost++;                      t[home].form.push("L");
-      t[away].won++; t[away].points += 3;  t[away].form.push("W");
-    }
-  });
-  return Object.values(t)
-    .map((x) => ({ ...x, gd: x.gf - x.ga, form: x.form.slice(-5) }))
-    .sort((a, b) => b.points - a.points || b.gd - a.gd || b.gf - a.gf)
-    .map((x, i) => ({ ...x, pos: i + 1 }));
-}
-
-const formStyle = { W: "bg-green-500", D: "bg-slate-500", L: "bg-red-500" };
-const zoneStyle = (pos, total) => {
-  if (pos <= 4)          return "border-l-2 border-blue-500";
-  if (pos <= 6)          return "border-l-2 border-orange-400";
-  if (pos >= total - 2)  return "border-l-2 border-red-500";
-  return "";
-};
-
-// ─── AI Chat Message ──────────────────────────────────────────────────────────
-function ChatMessage({ msg }) {
-  const isUser = msg.role === "user";
-  return (
-    <div className={`flex gap-3 ${isUser ? "flex-row-reverse" : ""}`}>
-      <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${isUser ? "bg-blue-600" : "bg-emerald-600"}`}>
-        {isUser ? <User size={13} /> : <Bot size={13} />}
-      </div>
-      <div className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-        isUser
-          ? "bg-blue-600 text-white rounded-tr-none"
-          : "bg-slate-800 text-slate-200 rounded-tl-none border border-slate-700"
-      }`}>
-        {msg.loading
-          ? <span className="flex gap-1 items-center text-slate-400">
-              <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-              <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-              <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
-            </span>
-          : <span style={{ whiteSpace: "pre-wrap" }}>{msg.content}</span>
-        }
-      </div>
-    </div>
-  );
-}
-
 // ═══════════════════════════════════════════════════════════════════════════════
 export default function Dashboard() {
   const [activeNav, setActiveNav]                 = useState("Dashboard");
@@ -146,25 +79,11 @@ export default function Dashboard() {
   const [accuracy, setAccuracy]                   = useState(null);
   const [predictions, setPredictions]             = useState([]);
   const [allPredictions, setAllPredictions]       = useState([]);
-  const [historicalMatches, setHistoricalMatches] = useState([]);
-  const [standings, setStandings]                 = useState([]);
   const [notifications, setNotifications]         = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const [loadingStats, setLoadingStats]           = useState(true);
   const [loadingPreds, setLoadingPreds]           = useState(true);
-  const [loadingHistory, setLoadingHistory]       = useState(false);
   const [runningInference, setRunningInference]   = useState(false);
-
-  // AI Chat
-  const [chatMessages, setChatMessages] = useState([
-    {
-      role: "assistant",
-      content: "Hello! I'm your EPL AI analyst. Ask me anything — match predictions, team form, probability breakdowns, or head-to-head analysis. I have live access to the prediction model's data. 🏴󠁧󠁢󠁥󠁮󠁧󠁿⚽",
-    },
-  ]);
-  const [chatInput, setChatInput]     = useState("");
-  const [chatLoading, setChatLoading] = useState(false);
-  const chatEndRef                    = useRef(null);
 
   const navigate    = useNavigate();
   const token       = localStorage.getItem("token");
@@ -195,7 +114,7 @@ export default function Dashboard() {
       .then((d) => setPredictions(Array.isArray(d) ? d : d.items ?? []));
   }, []);
 
-  // ── All predictions (for AI context + Predictions tab) ───────────────────
+  // ── All predictions (Predictions tab) ────────────────────────────────────
   useEffect(() => {
     setLoadingPreds(true);
     fetch(`${BASE_URL}/predictions?skip=0&limit=20`, { headers: authHeaders })
@@ -204,31 +123,12 @@ export default function Dashboard() {
       .finally(() => setLoadingPreds(false));
   }, []);
 
-  // ── Historical matches → standings ────────────────────────────────────────
-  useEffect(() => {
-    if (activeNav !== "Standings") return;
-    setLoadingHistory(true);
-    fetch(`${BASE_URL}/historical-matches?skip=0&limit=380`, { headers: authHeaders })
-      .then((r) => r.ok ? r.json() : [])
-      .then((d) => {
-        const arr = Array.isArray(d) ? d : d.items ?? d.data ?? [];
-        setHistoricalMatches(arr);
-        setStandings(buildStandings(arr));
-      })
-      .finally(() => setLoadingHistory(false));
-  }, [activeNav]);
-
   // ── Notifications ─────────────────────────────────────────────────────────
   useEffect(() => {
     fetch(`${BASE_URL}/notifications?limit=10&unread_only=false`, { headers: authHeaders })
       .then((r) => r.ok ? r.json() : [])
       .then((d) => setNotifications(Array.isArray(d) ? d : []));
   }, []);
-
-  // ── Scroll chat to bottom ─────────────────────────────────────────────────
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chatMessages]);
 
   // ── Actions ───────────────────────────────────────────────────────────────
   const handleLogout = async () => {
@@ -256,85 +156,6 @@ export default function Dashboard() {
       });
       setNotifications((prev) => prev.map((n) => n.id === id ? { ...n, is_read: true } : n));
     } catch {}
-  };
-
-  // ── AI Chat ───────────────────────────────────────────────────────────────
-  const buildSystemPrompt = () => {
-    const predsContext = allPredictions.length > 0
-      ? `\n\nCURRENT EPL PREDICTIONS FROM THE MODEL:\n${allPredictions.slice(0, 10).map((p) =>
-          `• ${p.home_team} vs ${p.away_team} (${formatDate(p.match_date)}): ` +
-          `Predicted: ${outcomeLabel(p.outcome)} | ` +
-          `Home ${pct(p.prob_home)} | Draw ${pct(p.prob_draw)} | Away ${pct(p.prob_away)} | ` +
-          `Confidence: ${p.confidence != null ? Math.round(p.confidence * 100) + "%" : "N/A"}`
-        ).join("\n")}`
-      : "";
-
-    const accuracyContext = accuracy
-      ? `\n\nMODEL ACCURACY STATS:\n` +
-        `Overall: ${pct(accuracy.overall_accuracy)} (${accuracy.correct_predictions}/${accuracy.total_predictions_analyzed} correct)\n` +
-        `30-day: ${pct(accuracy.recent_accuracy_30_days)} over ${accuracy.recent_predictions_count} recent matches\n` +
-        `High-confidence: ${pct(accuracy.high_confidence_accuracy)} (${accuracy.high_confidence_predictions} predictions)\n` +
-        `Home win accuracy: ${pct(accuracy.home_win_accuracy)} | Draw: ${pct(accuracy.draw_accuracy)} | Away: ${pct(accuracy.away_win_accuracy)}`
-      : "";
-
-    return (
-      `You are SokkaAI, an expert EPL football analyst assistant embedded in a match prediction dashboard. ` +
-      `You have access to live data from a machine learning prediction model. ` +
-      `Be concise, insightful, and data-driven. Use football terminology naturally. ` +
-      `When asked about specific matches, reference the actual prediction data provided. ` +
-      `Format probabilities as percentages. Keep responses under 200 words unless the user asks for detail.` +
-      predsContext +
-      accuracyContext
-    );
-  };
-
-  const sendChatMessage = async () => {
-    const text = chatInput.trim();
-    if (!text || chatLoading) return;
-
-    const userMsg   = { role: "user", content: text };
-    const loadingMsg = { role: "assistant", content: "", loading: true };
-
-    setChatMessages((prev) => [...prev, userMsg, loadingMsg]);
-    setChatInput("");
-    setChatLoading(true);
-
-    // Build message history for Claude (exclude loading placeholder, exclude system)
-    const history = [...chatMessages, userMsg]
-      .filter((m) => !m.loading)
-      .map((m) => ({ role: m.role, content: m.content }));
-
-    try {
-      const res = await fetch(CLAUDE_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: CLAUDE_MODEL,
-          max_tokens: 1000,
-          system: buildSystemPrompt(),
-          messages: history,
-        }),
-      });
-
-      const data = await res.json();
-      const reply = data.content?.map((b) => b.text ?? "").join("") || "Sorry, I couldn't generate a response.";
-
-      setChatMessages((prev) => [
-        ...prev.slice(0, -1),
-        { role: "assistant", content: reply },
-      ]);
-    } catch (e) {
-      setChatMessages((prev) => [
-        ...prev.slice(0, -1),
-        { role: "assistant", content: "⚠️ Connection error. Please try again." },
-      ]);
-    } finally {
-      setChatLoading(false);
-    }
-  };
-
-  const handleChatKey = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendChatMessage(); }
   };
 
   // ── Derived ───────────────────────────────────────────────────────────────
@@ -369,8 +190,6 @@ export default function Dashboard() {
   ];
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // RENDER
-  // ═══════════════════════════════════════════════════════════════════════════
   return (
     <div className="fixed inset-0 bg-slate-950 text-white flex flex-col lg:flex-row overflow-hidden">
 
@@ -380,7 +199,8 @@ export default function Dashboard() {
         {/* Brand */}
         <div className="mb-8">
           <h1 className="text-xl font-black tracking-tight">
-            <span className="text-blue-400">EPL</span><span  className="text-sm text-purple-400 font-semibold">PREDICTOR</span>
+            <span className="text-blue-400">EPL</span>
+            <span className="text-sm text-purple-400 font-semibold"> PREDICTOR</span>
           </h1>
           <p className="text-[9px] text-slate-600 uppercase tracking-widest font-bold">EPL Intelligence</p>
         </div>
@@ -510,10 +330,10 @@ export default function Dashboard() {
               {/* Quick actions */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 {[
-                  { label: "Predictions",    icon: <TrendingUpDown size={15} />, nav: "Predictions",  style: "bg-blue-600 hover:bg-blue-700 text-white" },
-                  { label: "Run Inference",  icon: <Zap size={15} />,            action: handleRunInference, style: "bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200" },
-                  { label: "Standings",      icon: <Trophy size={15} />,          nav: "Standings",    style: "bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200" },
-                  { label: "History",        icon: <History size={15} />,         nav: "History",      style: "bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200" },
+                  { label: "Predictions",   icon: <TrendingUpDown size={15} />, nav: "Predictions", style: "bg-blue-600 hover:bg-blue-700 text-white" },
+                  { label: "Run Inference", icon: <Zap size={15} />,            action: handleRunInference, style: "bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200" },
+                  { label: "Standings",     icon: <Trophy size={15} />,         nav: "Standings",   style: "bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200" },
+                  { label: "History",       icon: <History size={15} />,        nav: "History",     style: "bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200" },
                 ].map((a) => (
                   <button
                     key={a.label}
@@ -527,74 +347,39 @@ export default function Dashboard() {
                 ))}
               </div>
 
-              {/* Bottom grid: recent predictions + AI chat */}
-              <div className="grid lg:grid-cols-2 gap-6">
-
-                {/* Recent predictions */}
-                <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
-                  <h3 className="text-xs font-bold uppercase tracking-widest text-blue-400 mb-4">Recent Predictions</h3>
-                  {predictions.length === 0
-                    ? <div className="flex flex-col items-center justify-center py-10 text-center gap-2">
-                        <span className="text-3xl">⚽</span>
-                        <p className="text-slate-500 text-sm">No prediction history yet.</p>
-                      </div>
-                    : <div className="space-y-2">
-                        {predictions.map((p) => (
-                          <div key={p.id} className="flex items-center justify-between p-3 bg-slate-950/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-all cursor-pointer">
-                            <div>
-                              <p className="text-sm font-bold">{p.home_team ?? "TBD"} <span className="text-slate-600">vs</span> {p.away_team ?? "TBD"}</p>
-                              <p className="text-[10px] text-slate-600 mt-0.5">{formatDate(p.match_date)}</p>
-                            </div>
-                            <div className="text-right">
-                              <p className={`text-xs font-bold ${outcomeColor(p.outcome)}`}>{outcomeLabel(p.outcome)}</p>
-                              {p.confidence != null && (
-                                <p className="text-[10px] text-slate-600 mt-0.5">{Math.round(p.confidence * 100)}% conf.</p>
-                              )}
-                            </div>
+              {/* Recent predictions*/}
+              <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xs font-bold uppercase tracking-widest text-blue-400">Recent Predictions</h3>
+                  <button
+                    onClick={() => setActiveNav("Predictions")}
+                    className="text-xs text-slate-500 hover:text-blue-400 flex items-center gap-1 transition-colors"
+                  >
+                    View all <ChevronRight size={13} />
+                  </button>
+                </div>
+                {predictions.length === 0
+                  ? <div className="flex flex-col items-center justify-center py-10 text-center gap-2">
+                      <span className="text-3xl">⚽</span>
+                      <p className="text-slate-500 text-sm">No prediction history yet.</p>
+                    </div>
+                  : <div className="grid lg:grid-cols-2 gap-3">
+                      {predictions.map((p) => (
+                        <div key={p.id} className="flex items-center justify-between p-3 bg-slate-950/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-all cursor-pointer">
+                          <div>
+                            <p className="text-sm font-bold">{p.home_team ?? "TBD"} <span className="text-slate-600">vs</span> {p.away_team ?? "TBD"}</p>
+                            <p className="text-[10px] text-slate-600 mt-0.5">{formatDate(p.match_date)}</p>
                           </div>
-                        ))}
-                      </div>
-                  }
-                </div>
-
-                {/* AI Match Predictor — mini chat on dashboard */}
-                <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col h-[420px]">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center">
-                      <Bot size={14} />
+                          <div className="text-right">
+                            <p className={`text-xs font-bold ${outcomeColor(p.outcome)}`}>{outcomeLabel(p.outcome)}</p>
+                            {p.confidence != null && (
+                              <p className="text-[10px] text-slate-600 mt-0.5">{confPct(p.confidence)}% conf.</p>
+                            )}
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                    <div>
-                      <h3 className="text-xs font-bold uppercase tracking-widest text-purple-400">AI Match Predictor</h3>
-                      <p className="text-[9px] text-slate-600">Powered by live model data</p>
-                    </div>
-                  </div>
-
-                  {/* Messages */}
-                  <div className="flex-1 overflow-y-auto space-y-3 pr-1 mb-3">
-                    {chatMessages.map((msg, i) => <ChatMessage key={i} msg={msg} />)}
-                    <div ref={chatEndRef} />
-                  </div>
-
-                  {/* Input */}
-                  <div className="relative flex items-end gap-2">
-                    <textarea
-                      rows={1}
-                      value={chatInput}
-                      onChange={(e) => setChatInput(e.target.value)}
-                      onKeyDown={handleChatKey}
-                      placeholder="Ask about any EPL match…"
-                      className="flex-1 bg-slate-800 text-white placeholder-slate-600 px-4 py-2.5 rounded-xl border border-slate-700 focus:border-blue-500 focus:outline-none transition-all text-sm resize-none"
-                      style={{ maxHeight: "80px" }}
-                    />
-                    <button
-                      onClick={sendChatMessage}
-                      disabled={chatLoading || !chatInput.trim()}
-                      className="p-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-40 transition-all flex-shrink-0"
-                    >
-                      <Send size={15} />
-                    </button>
-                  </div>
-                </div>
+                }
               </div>
             </div>
           )}
@@ -602,12 +387,7 @@ export default function Dashboard() {
           {/* ══ PREDICTIONS TAB ════════════════════════════════════════════════ */}
           {activeNav === "Predictions" && (
             <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <p className="text-slate-500 text-sm">{allPredictions.length} upcoming predictions</p>
-                <button onClick={() => setActiveNav("Dashboard")} className="text-xs text-blue-400 hover:underline flex items-center gap-1">
-                  <Bot size={12} /> Ask AI about these <ChevronRight size={12} />
-                </button>
-              </div>
+              <p className="text-slate-500 text-sm">{allPredictions.length} upcoming predictions</p>
 
               {loadingPreds ? (
                 <div className="flex justify-center py-16"><RefreshCw size={24} className="animate-spin text-blue-500" /></div>
@@ -627,13 +407,13 @@ export default function Dashboard() {
                       {/* Match header */}
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2 flex-1 min-w-0">
-                          {p.home_team_logo && <img src={p.home_team_logo} alt="" className="w-6 h-6 object-contain" />}
+                          
                           <span className="text-sm font-bold truncate">{p.home_team ?? "TBD"}</span>
                         </div>
                         <span className="text-[10px] text-slate-600 font-bold uppercase px-2">vs</span>
                         <div className="flex items-center gap-2 flex-1 min-w-0 justify-end">
                           <span className="text-sm font-bold truncate text-right">{p.away_team ?? "TBD"}</span>
-                          {p.away_team_logo && <img src={p.away_team_logo} alt="" className="w-6 h-6 object-contain" />}
+                          
                         </div>
                       </div>
 
@@ -642,10 +422,10 @@ export default function Dashboard() {
                         <span className="text-[10px] text-slate-600">{formatDate(p.match_date)}</span>
                         <div className="flex items-center gap-2">
                           {p.confidence != null && (
-                            <span className="text-[9px] font-bold text-slate-500 uppercase">{Math.round(p.confidence * 100)}% conf.</span>
+                            <span className="text-[9px] font-bold text-slate-500 uppercase">{confPct(p.confidence)}% conf.</span>
                           )}
                           <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${
-                            outcomeColor(p.outcome) === "text-blue-400" ? "border-blue-500/40 bg-blue-500/10 text-blue-400"
+                            outcomeColor(p.outcome) === "text-blue-400"   ? "border-blue-500/40 bg-blue-500/10 text-blue-400"
                             : outcomeColor(p.outcome) === "text-yellow-400" ? "border-yellow-500/40 bg-yellow-500/10 text-yellow-400"
                             : "border-purple-500/40 bg-purple-500/10 text-purple-400"
                           }`}>{outcomeLabel(p.outcome)}</span>
@@ -681,55 +461,7 @@ export default function Dashboard() {
 
           {/* ══ STANDINGS TAB ══════════════════════════════════════════════════ */}
           {activeNav === "Standings" && (
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xs font-bold uppercase tracking-widest text-blue-400">🏴󠁧󠁢󠁥󠁮󠁧󠁿 EPL Table</h3>
-                <div className="flex gap-4 text-[9px] font-bold uppercase tracking-wider">
-                  {[{c:"bg-blue-500",l:"Champions League"},{c:"bg-orange-400",l:"Europa"},{c:"bg-red-500",l:"Relegation"}].map((z)=>(
-                    <div key={z.l} className="flex items-center gap-1"><span className={`w-2 h-2 rounded-sm ${z.c}`}/><span className="text-slate-600">{z.l}</span></div>
-                  ))}
-                </div>
-              </div>
-
-              {loadingHistory ? (
-                <div className="flex justify-center py-16"><RefreshCw size={24} className="animate-spin text-blue-500" /></div>
-              ) : standings.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-16 gap-2">
-                  <span className="text-4xl">⚽</span>
-                  <p className="text-slate-400">No match history available to build standings.</p>
-                </div>
-              ) : (
-                <>
-                  <div className="grid grid-cols-12 px-3 pb-2 border-b border-slate-800">
-                    {["#","Club","P","W","D","L","GD","Form","Pts"].map((h,i)=>(
-                      <span key={h} className={`text-[9px] text-slate-600 uppercase font-bold ${
-                        i===0?"col-span-1":i===1?"col-span-3":i===7?"col-span-2 hidden md:block text-center":"col-span-1 text-center"}`}>{h}</span>
-                    ))}
-                  </div>
-                  <div className="space-y-1 mt-1">
-                    {standings.map((team) => (
-                      <div key={team.team} className={`group grid grid-cols-12 items-center bg-slate-950/40 rounded-lg px-3 py-2.5 hover:bg-slate-800/50 transition-all ${zoneStyle(team.pos, standings.length)}`}>
-                        <span className="col-span-1 text-slate-400 text-sm font-bold">{team.pos}</span>
-                        <span className="col-span-3 text-white text-sm font-semibold truncate">{team.team}</span>
-                        <span className="col-span-1 text-slate-400 text-xs text-center">{team.played}</span>
-                        <span className="col-span-1 text-green-400 text-xs font-bold text-center">{team.won}</span>
-                        <span className="col-span-1 text-slate-500 text-xs text-center">{team.drawn}</span>
-                        <span className="col-span-1 text-red-400 text-xs text-center">{team.lost}</span>
-                        <span className={`col-span-1 text-xs font-bold text-center ${team.gd>0?"text-green-400":team.gd<0?"text-red-400":"text-slate-500"}`}>
-                          {team.gd>0?`+${team.gd}`:team.gd}
-                        </span>
-                        <div className="col-span-2 hidden md:flex items-center justify-center gap-0.5">
-                          {team.form.map((f,i)=>(
-                            <span key={i} className={`w-4 h-4 rounded-sm text-[8px] font-black flex items-center justify-center text-white ${formStyle[f]}`}>{f}</span>
-                          ))}
-                        </div>
-                        <span className="col-span-1 text-white text-sm font-black text-center">{team.points}</span>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
+            <Leaderboard />
           )}
 
           {/* ══ HISTORY TAB ════════════════════════════════════════════════════ */}
@@ -743,7 +475,7 @@ export default function Dashboard() {
   );
 }
 
-// ─── History Tab (separate to avoid re-render on parent state changes) ────────
+// ─── History Tab ──────────────────────────────────────────────────────────────
 function HistoryTab({ authHeaders, formatDate, outcomeLabel, outcomeColor }) {
   const [items, setItems]     = useState([]);
   const [loading, setLoading] = useState(true);
@@ -791,9 +523,14 @@ function HistoryTab({ authHeaders, formatDate, outcomeLabel, outcomeColor }) {
             {p.confidence != null && (
               <div className="flex items-center justify-end gap-1 mt-0.5">
                 <div className="w-12 h-1 bg-slate-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-blue-500 rounded-full" style={{ width: `${Math.round(p.confidence * 100)}%` }} />
+                  <div
+                    className="h-full bg-blue-500 rounded-full"
+                    style={{ width: `${p.confidence > 1 ? Math.round(p.confidence) : Math.round(p.confidence * 100)}%` }}
+                  />
                 </div>
-                <span className="text-[10px] text-slate-600">{Math.round(p.confidence * 100)}%</span>
+                <span className="text-[10px] text-slate-600">
+                  {p.confidence > 1 ? Math.round(p.confidence) : Math.round(p.confidence * 100)}%
+                </span>
               </div>
             )}
           </div>
@@ -813,4 +550,5 @@ function HistoryTab({ authHeaders, formatDate, outcomeLabel, outcomeColor }) {
     </div>
   );
 }
+
 Dashboard.hideFooter = true;

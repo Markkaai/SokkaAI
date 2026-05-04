@@ -21,7 +21,6 @@ export default function Login() {
     setLoading(true);
 
     try {
-      // --- Validation ---
       if (!formData.email || !formData.password) {
         setError("Please fill in all required fields.");
         return;
@@ -49,14 +48,12 @@ export default function Login() {
         const data = await res.json();
         if (!res.ok) throw new Error(data.detail || data.message || "Registration failed.");
 
-        // Registration returns a token too — log user in directly
         if (data.access_token) {
           await loginWithToken(data.access_token, data.token_type || "bearer");
         } else {
-          // Fallback: switch to login tab
           setIsSignup(false);
           setFormData((f) => ({ ...f, password: "", confirm: "" }));
-          setError(""); // clear
+          setError("");
           alert("Account created! Please log in.");
         }
 
@@ -74,7 +71,6 @@ export default function Login() {
 
         const data = await res.json();
         if (!res.ok) throw new Error(data.detail || data.message || "Login failed.");
-
         if (!data.access_token) throw new Error("No access token received.");
 
         await loginWithToken(data.access_token, data.token_type || "bearer");
@@ -91,7 +87,6 @@ export default function Login() {
     }
   };
 
-  // Fetch /user to determine role, persist data, then route
   const loginWithToken = async (token, tokenType) => {
     localStorage.setItem("token", token);
     localStorage.setItem("token_type", tokenType);
@@ -101,8 +96,6 @@ export default function Login() {
     });
 
     if (!profileRes.ok) {
-      // Can't determine role — default to user dashboard
-      console.warn("Could not fetch user profile, defaulting to /dashboard");
       navigate("/dashboard");
       return;
     }
@@ -110,11 +103,8 @@ export default function Login() {
     const profile = await profileRes.json();
     localStorage.setItem("user", JSON.stringify(profile));
 
-    if (profile.is_admin) {
-      navigate("/admin");
-    } else {
-      navigate("/dashboard");
-    }
+    if (profile.is_admin) navigate("/admin");
+    else navigate("/dashboard");
   };
 
   const handleKeyDown = (e) => {
@@ -123,53 +113,68 @@ export default function Login() {
 
   const fields = isSignup
     ? [
-        { name: "name",     label: "Full Name",        type: "text",     placeholder: "John Doe" },
-        { name: "email",    label: "Email",             type: "email",    placeholder: "you@example.com" },
-        { name: "password", label: "Password",          type: "password", placeholder: "••••••••" },
-        { name: "confirm",  label: "Confirm Password",  type: "password", placeholder: "••••••••" },
+        { name: "name",     label: "Full Name",       type: "text",     placeholder: "John Doe"        },
+        { name: "email",    label: "Email",            type: "email",    placeholder: "you@example.com" },
+        { name: "password", label: "Password",         type: "password", placeholder: "••••••••"        },
+        { name: "confirm",  label: "Confirm Password", type: "password", placeholder: "••••••••"        },
       ]
     : [
         { name: "email",    label: "Email",    type: "email",    placeholder: "you@example.com" },
-        { name: "password", label: "Password", type: "password", placeholder: "••••••••" },
+        { name: "password", label: "Password", type: "password", placeholder: "••••••••"        },
       ];
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4 relative overflow-hidden">
+
+      {/* Background pitch grid */}
       <div
-        className="w-full max-w-md bg-black/60 backdrop-blur-md border border-blue-500/30
-                   rounded-2xl px-8 py-10 shadow-2xl shadow-blue-500/10 animate-fade-in"
-      >
+        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,0.8) 40px, rgba(255,255,255,0.8) 41px),
+                            repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(255,255,255,0.4) 60px, rgba(255,255,255,0.4) 61px)`,
+        }}
+      />
+
+      {/* Glow blobs */}
+      <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-purple-600/10 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="w-full max-w-md bg-slate-900/80 backdrop-blur-md border border-slate-800 rounded-2xl px-8 py-10 shadow-2xl shadow-black/40 relative z-10">
+
         {/* Logo */}
-        <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold">
-            <span className="text-blue-400">Sokka</span>
-            <span className="text-purple-400">AI</span>
-          </h1>
-          <p className="text-slate-400 text-sm mt-1">
-            {isSignup
-              ? "Create your account to get started"
-              : "Welcome back! Please login to continue"}
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            
+            <h1 className="text-3xl font-bold tracking-tight">
+              <span className="text-blue-400">EPL</span>
+              <span className="text-purple-400"> Predictor</span>
+            </h1>
+          </div>
+          <p className="text-slate-500 text-sm uppercase tracking-widest font-bold">
+            AI Football Intelligence
+          </p>
+          <p className="text-slate-400 text-sm mt-3">
+            {isSignup ? "Create your account to get started" : "Welcome back! Please login to continue"}
           </p>
         </div>
 
-
         {/* Toggle Tabs */}
-        <div className="flex bg-slate-800 rounded-lg p-1 mb-6">
+        <div className="flex bg-slate-800 rounded-lg p-1 mb-6 border border-slate-700">
           <button
             onClick={() => { setIsSignup(false); setError(""); }}
-            className={`flex-1 py-2 rounded-md text-sm font-medium transition-all duration-300
-                       ${!isSignup
-                         ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md"
-                         : "text-slate-400 hover:text-white"}`}
+            className={`flex-1 py-2 rounded-md text-sm font-bold uppercase tracking-widest transition-all duration-300
+              ${!isSignup
+                ? "bg-blue-600 text-white shadow-md shadow-blue-600/30"
+                : "text-slate-400 hover:text-white"}`}
           >
             Login
           </button>
           <button
             onClick={() => { setIsSignup(true); setError(""); }}
-            className={`flex-1 py-2 rounded-md text-sm font-medium transition-all duration-300
-                       ${isSignup
-                         ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md"
-                         : "text-slate-400 hover:text-white"}`}
+            className={`flex-1 py-2 rounded-md text-sm font-bold uppercase tracking-widest transition-all duration-300
+              ${isSignup
+                ? "bg-blue-600 text-white shadow-md shadow-blue-600/30"
+                : "text-slate-400 hover:text-white"}`}
           >
             Sign Up
           </button>
@@ -179,7 +184,9 @@ export default function Login() {
         <div className="space-y-4">
           {fields.map((field) => (
             <div key={field.name}>
-              <label className="text-slate-400 text-sm mb-1 block">{field.label}</label>
+              <label className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-1.5 block">
+                {field.label}
+              </label>
               <input
                 type={field.type}
                 name={field.name}
@@ -189,11 +196,11 @@ export default function Login() {
                 onFocus={() => setFocusedInput(field.name)}
                 onBlur={() => setFocusedInput(null)}
                 placeholder={field.placeholder}
-                className={`w-full bg-slate-800/80 text-white placeholder-slate-500 px-4 py-3
-                           rounded-lg border outline-none transition-all duration-300
-                           ${focusedInput === field.name
-                             ? "border-blue-500 shadow-md shadow-blue-500/30"
-                             : "border-slate-700"}`}
+                className={`w-full bg-slate-950 text-white placeholder-slate-600 px-4 py-3
+                  rounded-lg border outline-none transition-all duration-300 text-sm font-medium
+                  ${focusedInput === field.name
+                    ? "border-blue-600 shadow-md shadow-blue-600/20"
+                    : "border-slate-800 hover:border-slate-700"}`}
               />
             </div>
           ))}
@@ -201,16 +208,16 @@ export default function Login() {
           {/* Forgot Password */}
           {!isSignup && (
             <div className="text-right">
-              <button className="text-blue-400 text-sm hover:text-blue-300 transition-colors">
+              <button className="text-blue-400 text-xs font-bold uppercase tracking-wider hover:text-blue-300 transition-colors">
                 Forgot password?
               </button>
             </div>
           )}
 
-          {/* Inline error */}
+          {/* Error */}
           {error && (
             <div className="flex items-start gap-2 bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3">
-              <span className="text-red-400 mt-0.5">⚠️</span>
+              <span className="text-red-400 mt-0.5 text-sm">⚠️</span>
               <p className="text-red-300 text-sm">{error}</p>
             </div>
           )}
@@ -219,11 +226,10 @@ export default function Login() {
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className={`w-full py-3 rounded-lg font-semibold text-white mt-2
-                       bg-gradient-to-r from-blue-500 to-purple-500
-                       hover:from-blue-600 hover:to-purple-600
-                       transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/40
-                       active:scale-95 ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`w-full py-3.5 rounded-lg font-bold text-sm uppercase tracking-widest text-white mt-2
+              bg-blue-600 hover:bg-blue-700 transition-all duration-300
+              hover:shadow-lg hover:shadow-blue-600/30 active:scale-95
+              ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
           >
             {loading
               ? (isSignup ? "Creating account…" : "Signing in…")
@@ -232,17 +238,17 @@ export default function Login() {
 
           {/* Divider */}
           <div className="flex items-center gap-3">
-            <div className="flex-1 h-px bg-slate-700" />
-            <span className="text-slate-500 text-sm">or</span>
-            <div className="flex-1 h-px bg-slate-700" />
+            <div className="flex-1 h-px bg-slate-800" />
+            <span className="text-slate-600 text-xs uppercase tracking-widest">or</span>
+            <div className="flex-1 h-px bg-slate-800" />
           </div>
 
           {/* Switch */}
-          <p className="text-center text-slate-400 text-sm">
+          <p className="text-center text-slate-500 text-sm">
             {isSignup ? "Already have an account? " : "Don't have an account? "}
             <button
               onClick={() => { setIsSignup(!isSignup); setError(""); }}
-              className="text-blue-400 hover:text-blue-300 transition-colors font-medium"
+              className="text-blue-400 hover:text-blue-300 transition-colors font-bold"
             >
               {isSignup ? "Login" : "Sign Up"}
             </button>

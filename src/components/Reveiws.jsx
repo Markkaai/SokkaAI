@@ -87,7 +87,7 @@ export default function Reviews() {
           What Our <span className="text-blue-400">Users</span> Say
         </h2>
         <p className="text-slate-400 max-w-md mx-auto">
-          Thousands of people trust SokkaAI every day. Here's what they think.
+          Thousands of people trust EPL Predictor every day. Here's what they think.
         </p>
       </div>
 
