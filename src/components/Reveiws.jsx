@@ -7,7 +7,7 @@ const reviews = [
     role: "Sports Bettor",
     avatar: "A",
     rating: 5,
-    review: "This app has completely transformed how I place bets. The predictions are incredibly accurate and I've seen a huge improvement in my win rate!",
+    review: "I stopped guessing and started betting with data. The match predictions and confidence levels helped me cut bad bets and focus only on high-value games.",
     color: "from-blue-500 to-blue-600",
   },
   {
@@ -16,7 +16,7 @@ const reviews = [
     role: "Football Analyst",
     avatar: "S",
     rating: 5,
-    review: "The AI-powered match insights are outstanding. I use it daily for game analysis and it never disappoints. A must-have for any serious analyst!",
+    review:  "The win probability breakdowns are insanely useful. I cross-check them with bookmaker odds and spot value bets much faster now.",
     color: "from-purple-500 to-purple-600",
   },
   {
@@ -25,7 +25,7 @@ const reviews = [
     role: "Fantasy Football Player",
     avatar: "J",
     rating: 4,
-    review: "As a fantasy football enthusiast, this app has been a game changer. The player performance predictions help me dominate my league every week.",
+    review: "My accumulators used to fail constantly. Now I build smarter slips using the model’s predictions and my overall success rate has improved.",
     color: "from-cyan-500 to-cyan-600",
   },
   {
@@ -34,7 +34,7 @@ const reviews = [
     role: "Football Fan",
     avatar: "A",
     rating: 5,
-    review: "I enjoy matches so much more now. The pre-match predictions and live insights keep me engaged and I can follow every game with confidence.",
+    review:  "This is more than predictions, it’s real insight. The stats behind each match give me confidence before placing any bet.",
     color: "from-green-500 to-green-600",
   },
   {
