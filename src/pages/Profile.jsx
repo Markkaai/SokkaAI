@@ -55,7 +55,7 @@ const handleSaveProfile = async () => {
     const payload = {
       full_name: fullName,
       email: email,
-      profile_photo_url: previewImage, // MUST be URL string
+      profile_photo_url: previewImage,
     };
 
     const res = await fetch(
@@ -87,14 +87,41 @@ const handleSaveProfile = async () => {
   }
 };
 
-const handlePhotoChange = (e) => {
+const handlePhotoChange = async (e) => {
   const file = e.target.files[0];
-
   if (!file) return;
 
-  setProfilePhoto(file);
-
+  // preview instantly
   setPreviewImage(URL.createObjectURL(file));
+
+  try {
+    const url = await uploadToCloudinary(file);
+
+    console.log("Cloudinary URL:", url);
+
+    setProfilePhoto(url);
+    setPreviewImage(url);
+  } catch (err) {
+    console.error("Upload failed:", err);
+  }
+};
+
+const uploadToCloudinary = async (file) => {
+  const data = new FormData();
+
+  data.append("file", file);
+  data.append("upload_preset", "sokkaAI");
+
+  const res = await fetch(
+    "https://api.cloudinary.com/v1_1/da2ymttjd/image/upload",
+    {
+      method: "POST",
+      body: data,
+    }
+  );
+
+  const result = await res.json();
+  return result.secure_url; // THIS is the real image URL
 };
 
   useEffect(() => {

@@ -112,10 +112,16 @@ export default function Dashboard() {
 
   // ── Recent history ────────────────────────────────────────────────────────
   useEffect(() => {
-    fetch(`${BASE_URL}/prediction-history?skip=0&limit=5`, { headers: authHeaders })
-      .then((r) => r.ok ? r.json() : [])
-      .then((d) => setPredictions(Array.isArray(d) ? d : d.items ?? []));
-  }, []);
+  fetch(`${BASE_URL}/prediction-history?skip=0&limit=5`, {
+    headers: authHeaders,
+  })
+    .then((r) => r.ok ? r.json() : [])
+    .then((d) => {
+      console.log("Prediction API response:", d);
+
+      setPredictions(Array.isArray(d) ? d : d.items ?? []);
+    });
+}, []);
 
   // ── All predictions (Predictions tab) ────────────────────────────────────
   useEffect(() => {
@@ -200,7 +206,7 @@ export default function Dashboard() {
     <div className="fixed inset-0 bg-slate-950 text-white flex flex-col lg:flex-row overflow-hidden">
 
       {/* ── Sidebar ─────────────────────────────────────────────────────────── */}
-      <aside className="hidden lg:flex flex-col w-60 bg-slate-900/60 border-r border-slate-800 p-5 flex-shrink-0">
+      <aside className="hidden lg:flex flex-col w-60 bg-slate-900/60 border-r border-slate-800 p-5 shrink-0">
 
         {/* Brand */}
         <div className="mb-8">
@@ -251,7 +257,7 @@ export default function Dashboard() {
       <main className="flex-1 flex flex-col overflow-hidden">
 
         {/* Top bar */}
-        <header className="flex items-center justify-between px-6 py-4 border-b border-slate-800 flex-shrink-0">
+        <header className="flex items-center justify-between px-6 py-4 border-b border-slate-800 shrink-0">
           <div>
             <h2 className="text-lg font-bold">
               {activeNav === "Dashboard" && <>Welcome, <span className="text-blue-400">{user?.full_name?.split(" ")[0] || "User"}</span> 👋</>}
@@ -366,7 +372,6 @@ export default function Dashboard() {
                 </div>
                 {predictions.length === 0
                   ? <div className="flex flex-col items-center justify-center py-10 text-center gap-2">
-                      <span className="text-3xl">⚽</span>
                       <p className="text-slate-500 text-sm">No prediction history yet.</p>
                     </div>
                   : <div className="grid lg:grid-cols-2 gap-3">
@@ -379,7 +384,7 @@ export default function Dashboard() {
                           <div className="text-right">
                             <p className={`text-xs font-bold ${outcomeColor(p.outcome)}`}>{outcomeLabel(p.outcome)}</p>
                             {p.confidence != null && (
-                              <p className="text-[10px] text-slate-600 mt-0.5">{confPct(p.confidence)}% conf.</p>
+                              <p className="text-[10px] text-slate-600 mt-0.5">{confPct(p.confidence)}% confidence</p>
                             )}
                           </div>
                         </div>
@@ -428,7 +433,7 @@ export default function Dashboard() {
                         <span className="text-[10px] text-slate-600">{formatDate(p.match_date)}</span>
                         <div className="flex items-center gap-2">
                           {p.confidence != null && (
-                            <span className="text-[9px] font-bold text-slate-500 uppercase">{confPct(p.confidence)}% conf.</span>
+                            <span className="text-[9px] font-bold text-slate-500 uppercase">{confPct(p.confidence)}% confidence</span>
                           )}
                           <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${
                             outcomeColor(p.outcome) === "text-blue-400"   ? "border-blue-500/40 bg-blue-500/10 text-blue-400"
@@ -518,7 +523,7 @@ function HistoryTab({ authHeaders, formatDate, outcomeLabel, outcomeColor }) {
       {items.map((p) => (
         <div key={p.id} className="flex items-center justify-between p-4 bg-slate-900 border border-slate-800 rounded-xl hover:border-slate-700 transition-all">
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-lg flex-shrink-0">⚽</div>
+            <div className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-lg shrink-0">⚽</div>
             <div>
               <p className="text-sm font-bold">{p.home_team ?? "TBD"} <span className="text-slate-600">vs</span> {p.away_team ?? "TBD"}</p>
               <p className="text-[10px] text-slate-600 mt-0.5">{formatDate(p.match_date)}</p>
