@@ -94,7 +94,10 @@ export default function Dashboard() {
     if (!token) { navigate("/"); return; }
     fetch(`${BASE_URL}/user`, { headers: authHeaders })
       .then((r) => r.ok ? r.json() : Promise.reject())
-      .then(setUser)
+      .then((data) => {
+      console.log("Fetched user:", data);
+      setUser(data);
+    })
       .catch(() => { localStorage.removeItem("token"); navigate("/"); });
   }, []);
 
@@ -188,6 +191,9 @@ export default function Dashboard() {
       icon:  <BarChart2 size={16} className="text-purple-400" />,
     },
   ];
+  if (!user) {
+  return <div className="text-white">Loading...</div>;
+}
 
   // ═══════════════════════════════════════════════════════════════════════════
   return (
@@ -199,15 +205,15 @@ export default function Dashboard() {
         {/* Brand */}
         <div className="mb-8">
           <h1 className="text-xl font-black tracking-tight">
-            <span className="text-blue-400">EPL</span>
-            <span className="text-sm text-purple-400 font-semibold"> PREDICTOR</span>
+            <span className="text-blue-400">SOKKA</span>
+            <span className="text-sm text-purple-400 font-semibold"> AI</span>
           </h1>
           <p className="text-[9px] text-slate-600 uppercase tracking-widest font-bold">EPL Intelligence</p>
         </div>
 
         {/* User card */}
-        <div className="flex items-center gap-3 mb-8 p-3 bg-slate-800/60 rounded-xl border border-slate-700">
-          <img src={avatarUrl} alt="avatar" className="w-9 h-9 rounded-full border-2 border-blue-500/50" />
+        <div onClick={() => navigate("/profile")} className="flex hover:cursor-pointer items-center gap-3 mb-8 p-3 bg-slate-800/60 rounded-xl border border-slate-700">
+          <img src={user.profile_photo_url || "https://via.placeholder.com/150"} alt="avatar" className="w-9 h-9 rounded-full border-2 border-blue-500/50" />
           <div className="truncate">
             <p className="text-sm font-bold truncate">{user ? user.full_name || user.email : "…"}</p>
             <span className={`text-[9px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded ${user?.is_admin ? "text-purple-300 bg-purple-500/20" : "text-blue-300 bg-blue-500/20"}`}>
