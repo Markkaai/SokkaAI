@@ -305,7 +305,7 @@ export default function Dashboard() {
                             <p className="text-[10px] text-slate-400 mt-0.5 truncate">{n.message}</p>
                             <p className="text-[10px] text-slate-600 mt-0.5">{formatDate(n.created_at)}</p>
                           </div>
-                          {!n.is_read && <span className="w-2 h-2 rounded-full bg-blue-400 mt-1 flex-shrink-0" />}
+                          {!n.is_read && <span className="w-2 h-2 rounded-full bg-blue-400 mt-1 shrink-0" />}
                         </div>
                       ))
                   }
@@ -377,10 +377,19 @@ export default function Dashboard() {
                   : <div className="grid lg:grid-cols-2 gap-3">
                       {predictions.map((p) => (
                         <div key={p.id} className="flex items-center justify-between p-3 bg-slate-950/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-all cursor-pointer">
-                          <div>
-                            <p className="text-sm font-bold">{p.home_team ?? "TBD"} <span className="text-slate-600">vs</span> {p.away_team ?? "TBD"}</p>
+                          <div className="flex justify-between w-[30%]">
+                            <div className="flex flex-col items-center justify-center">
+                              <img src={`${BASE_URL}${p.home_team_logo}`} className="h-6" />
+                              <p className="text-xs text-white">{p.home_team ?? "TBD"}</p>
+                            </div>
+                            <span className="text-slate-600">vs</span>
+                            <div className="flex flex-col items-center justify-center">
+                              <img src={`${BASE_URL}${p.away_team_logo}`} className="h-6" />
+                              <p className="text-xs text-white">{p.away_team ?? "TBD"}</p>
+                            </div>
+                            </div>
                             <p className="text-[10px] text-slate-600 mt-0.5">{formatDate(p.match_date)}</p>
-                          </div>
+                          
                           <div className="text-right">
                             <p className={`text-xs font-bold ${outcomeColor(p.outcome)}`}>{outcomeLabel(p.outcome)}</p>
                             {p.confidence != null && (
@@ -417,12 +426,13 @@ export default function Dashboard() {
                     <div key={p.id} className="bg-slate-900 border border-slate-800 rounded-xl p-5 hover:border-slate-700 transition-all">
                       {/* Match header */}
                       <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2 flex-1 min-w-0">
-                          
+                        <div className="flex items-center gap-2 flex-1 min-w-0 flex-col">
+                          <img src={`${BASE_URL}${p.home_team_logo}`} className="h-20" />
                           <span className="text-sm font-bold truncate">{p.home_team ?? "TBD"}</span>
                         </div>
                         <span className="text-[10px] text-slate-600 font-bold uppercase px-2">vs</span>
-                        <div className="flex items-center gap-2 flex-1 min-w-0 justify-end">
+                        <div className="flex items-center gap-2 flex-1 min-w-0 justify-end flex-col">
+                          <img src={`${BASE_URL}${p.away_team_logo}`} className="h-20" />
                           <span className="text-sm font-bold truncate text-right">{p.away_team ?? "TBD"}</span>
                           
                         </div>
