@@ -94,7 +94,10 @@ export default function Dashboard() {
     if (!token) { navigate("/"); return; }
     fetch(`${BASE_URL}/user`, { headers: authHeaders })
       .then((r) => r.ok ? r.json() : Promise.reject())
-      .then(setUser)
+      .then((data) => {
+      console.log("Fetched user:", data);
+      setUser(data);
+    })
       .catch(() => { localStorage.removeItem("token"); navigate("/"); });
   }, []);
 
@@ -109,10 +112,16 @@ export default function Dashboard() {
 
   // ── Recent history ────────────────────────────────────────────────────────
   useEffect(() => {
-    fetch(`${BASE_URL}/prediction-history?skip=0&limit=5`, { headers: authHeaders })
-      .then((r) => r.ok ? r.json() : [])
-      .then((d) => setPredictions(Array.isArray(d) ? d : d.items ?? []));
-  }, []);
+  fetch(`${BASE_URL}/prediction-history?skip=0&limit=5`, {
+    headers: authHeaders,
+  })
+    .then((r) => r.ok ? r.json() : [])
+    .then((d) => {
+      console.log("Prediction API response:", d);
+
+      setPredictions(Array.isArray(d) ? d : d.items ?? []);
+    });
+}, []);
 
   // ── All predictions (Predictions tab) ────────────────────────────────────
   useEffect(() => {
@@ -188,26 +197,29 @@ export default function Dashboard() {
       icon:  <BarChart2 size={16} className="text-purple-400" />,
     },
   ];
+  if (!user) {
+  return <div className="text-white">Loading...</div>;
+}
 
   // ═══════════════════════════════════════════════════════════════════════════
   return (
     <div className="fixed inset-0 bg-slate-950 text-white flex flex-col lg:flex-row overflow-hidden">
 
       {/* ── Sidebar ─────────────────────────────────────────────────────────── */}
-      <aside className="hidden lg:flex flex-col w-60 bg-slate-900/60 border-r border-slate-800 p-5 flex-shrink-0">
+      <aside className="hidden lg:flex flex-col w-60 bg-slate-900/60 border-r border-slate-800 p-5 shrink-0">
 
         {/* Brand */}
         <div className="mb-8">
           <h1 className="text-xl font-black tracking-tight">
-            <span className="text-blue-400">EPL</span>
-            <span className="text-sm text-purple-400 font-semibold"> PREDICTOR</span>
+            <span className="text-blue-400">SOKKA</span>
+            <span className="text-sm text-purple-400 font-semibold"> AI</span>
           </h1>
           <p className="text-[9px] text-slate-600 uppercase tracking-widest font-bold">EPL Intelligence</p>
         </div>
 
         {/* User card */}
-        <div className="flex items-center gap-3 mb-8 p-3 bg-slate-800/60 rounded-xl border border-slate-700">
-          <img src={avatarUrl} alt="avatar" className="w-9 h-9 rounded-full border-2 border-blue-500/50" />
+        <div onClick={() => navigate("/profile")} className="flex hover:cursor-pointer items-center gap-3 mb-8 p-3 bg-slate-800/60 rounded-xl border border-slate-700">
+          <img src={user.profile_photo_url || "https://via.placeholder.com/150"} alt="avatar" className="w-9 h-9 rounded-full border-2 border-blue-500/50" />
           <div className="truncate">
             <p className="text-sm font-bold truncate">{user ? user.full_name || user.email : "…"}</p>
             <span className={`text-[9px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded ${user?.is_admin ? "text-purple-300 bg-purple-500/20" : "text-blue-300 bg-blue-500/20"}`}>
@@ -245,7 +257,7 @@ export default function Dashboard() {
       <main className="flex-1 flex flex-col overflow-hidden">
 
         {/* Top bar */}
-        <header className="flex items-center justify-between px-6 py-4 border-b border-slate-800 flex-shrink-0">
+        <header className="flex items-center justify-between px-6 py-4 border-b border-slate-800 shrink-0">
           <div>
             <h2 className="text-lg font-bold">
               {activeNav === "Dashboard" && <>Welcome, <span className="text-blue-400">{user?.full_name?.split(" ")[0] || "User"}</span> 👋</>}
@@ -293,7 +305,7 @@ export default function Dashboard() {
                             <p className="text-[10px] text-slate-400 mt-0.5 truncate">{n.message}</p>
                             <p className="text-[10px] text-slate-600 mt-0.5">{formatDate(n.created_at)}</p>
                           </div>
-                          {!n.is_read && <span className="w-2 h-2 rounded-full bg-blue-400 mt-1 flex-shrink-0" />}
+                          {!n.is_read && <span className="w-2 h-2 rounded-full bg-blue-400 mt-1 shrink-0" />}
                         </div>
                       ))
                   }
@@ -360,20 +372,28 @@ export default function Dashboard() {
                 </div>
                 {predictions.length === 0
                   ? <div className="flex flex-col items-center justify-center py-10 text-center gap-2">
-                      <span className="text-3xl">⚽</span>
                       <p className="text-slate-500 text-sm">No prediction history yet.</p>
                     </div>
                   : <div className="grid lg:grid-cols-2 gap-3">
                       {predictions.map((p) => (
                         <div key={p.id} className="flex items-center justify-between p-3 bg-slate-950/60 border border-slate-800 rounded-lg hover:border-slate-700 transition-all cursor-pointer">
-                          <div>
-                            <p className="text-sm font-bold">{p.home_team ?? "TBD"} <span className="text-slate-600">vs</span> {p.away_team ?? "TBD"}</p>
+                          <div className="flex justify-between w-[30%]">
+                            <div className="flex flex-col items-center justify-center">
+                              <img src={`${BASE_URL}${p.home_team_logo}`} className="h-6" />
+                              <p className="text-xs text-white">{p.home_team ?? "TBD"}</p>
+                            </div>
+                            <span className="text-slate-600">vs</span>
+                            <div className="flex flex-col items-center justify-center">
+                              <img src={`${BASE_URL}${p.away_team_logo}`} className="h-6" />
+                              <p className="text-xs text-white">{p.away_team ?? "TBD"}</p>
+                            </div>
+                            </div>
                             <p className="text-[10px] text-slate-600 mt-0.5">{formatDate(p.match_date)}</p>
-                          </div>
+                          
                           <div className="text-right">
                             <p className={`text-xs font-bold ${outcomeColor(p.outcome)}`}>{outcomeLabel(p.outcome)}</p>
                             {p.confidence != null && (
-                              <p className="text-[10px] text-slate-600 mt-0.5">{confPct(p.confidence)}% conf.</p>
+                              <p className="text-[10px] text-slate-600 mt-0.5">{confPct(p.confidence)}% confidence</p>
                             )}
                           </div>
                         </div>
@@ -406,12 +426,13 @@ export default function Dashboard() {
                     <div key={p.id} className="bg-slate-900 border border-slate-800 rounded-xl p-5 hover:border-slate-700 transition-all">
                       {/* Match header */}
                       <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2 flex-1 min-w-0">
-                          
+                        <div className="flex items-center gap-2 flex-1 min-w-0 flex-col">
+                          <img src={`${BASE_URL}${p.home_team_logo}`} className="h-20" />
                           <span className="text-sm font-bold truncate">{p.home_team ?? "TBD"}</span>
                         </div>
                         <span className="text-[10px] text-slate-600 font-bold uppercase px-2">vs</span>
-                        <div className="flex items-center gap-2 flex-1 min-w-0 justify-end">
+                        <div className="flex items-center gap-2 flex-1 min-w-0 justify-end flex-col">
+                          <img src={`${BASE_URL}${p.away_team_logo}`} className="h-20" />
                           <span className="text-sm font-bold truncate text-right">{p.away_team ?? "TBD"}</span>
                           
                         </div>
@@ -422,7 +443,7 @@ export default function Dashboard() {
                         <span className="text-[10px] text-slate-600">{formatDate(p.match_date)}</span>
                         <div className="flex items-center gap-2">
                           {p.confidence != null && (
-                            <span className="text-[9px] font-bold text-slate-500 uppercase">{confPct(p.confidence)}% conf.</span>
+                            <span className="text-[9px] font-bold text-slate-500 uppercase">{confPct(p.confidence)}% confidence</span>
                           )}
                           <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${
                             outcomeColor(p.outcome) === "text-blue-400"   ? "border-blue-500/40 bg-blue-500/10 text-blue-400"
@@ -512,7 +533,7 @@ function HistoryTab({ authHeaders, formatDate, outcomeLabel, outcomeColor }) {
       {items.map((p) => (
         <div key={p.id} className="flex items-center justify-between p-4 bg-slate-900 border border-slate-800 rounded-xl hover:border-slate-700 transition-all">
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-lg flex-shrink-0">⚽</div>
+            <div className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-lg shrink-0">⚽</div>
             <div>
               <p className="text-sm font-bold">{p.home_team ?? "TBD"} <span className="text-slate-600">vs</span> {p.away_team ?? "TBD"}</p>
               <p className="text-[10px] text-slate-600 mt-0.5">{formatDate(p.match_date)}</p>
