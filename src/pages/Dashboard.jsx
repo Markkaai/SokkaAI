@@ -516,12 +516,33 @@ export default function Dashboard() {
 
 // ─── History Tab ──────────────────────────────────────────────────────────────
 function HistoryTab({ authHeaders, formatDate }) {
-  const [items, setItems]     = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [hasMore, setHasMore] = useState(true);
-  const [skip, setSkip]       = useState(0);
-  const [modal, setModal]     = useState(null);
+  const [items, setItems]         = useState([]);
+  const [loading, setLoading]     = useState(true);
+  const [hasMore, setHasMore]     = useState(true);
+  const [skip, setSkip]           = useState(0);
+  const [modal, setModal]         = useState(null);
+  const [predMap, setPredMap]     = useState({}); // key: "HomeTeam|AwayTeam" → prediction object
   const LIMIT = 20;
+
+  // Build a lookup map from prediction-history so we can match by team names
+  useEffect(() => {
+    const fetchPreds = async () => {
+      try {
+        const res  = await fetch(`${BASE_URL}/prediction-history?skip=0&limit=200`, { headers: authHeaders });
+        const data = await res.json();
+        const arr  = Array.isArray(data) ? data : data.items ?? [];
+        const map  = {};
+        arr.forEach((p) => {
+          if (p.home_team && p.away_team) {
+            const key = `${p.home_team}|${p.away_team}`;
+            map[key] = p;
+          }
+        });
+        setPredMap(map);
+      } catch {}
+    };
+    fetchPreds();
+  }, []);
 
   const resultLabel = (ftr) => {
     if (ftr === "H") return "Home Win";
@@ -537,29 +558,45 @@ function HistoryTab({ authHeaders, formatDate }) {
     return "text-slate-400";
   };
 
+  // Normalize outcome string to H/D/A
+  const normalizeOutcome = (o) => {
+    if (!o) return null;
+    const u = o.toUpperCase().trim();
+    if (u === "H" || u === "HOME WIN" || u === "HOME") return "H";
+    if (u === "A" || u === "AWAY WIN" || u === "AWAY") return "A";
+    if (u === "D" || u === "DRAW")                     return "D";
+    return null;
+  };
+
+  // Get prediction for a historical match by matching team names
+  const getPrediction = (p) => {
+    const key = `${p.home_team}|${p.away_team}`;
+    return predMap[key] ?? null;
+  };
+
+  // Compare model prediction vs actual result
   const predictionStatus = (p) => {
-    if (!p.outcome || !p.ftr) return null;
-    const predicted = p.outcome.toUpperCase();
-    const actual    = p.ftr.toUpperCase();
-    const norm = predicted === "HOME WIN" || predicted === "HOME" ? "H"
-               : predicted === "AWAY WIN" || predicted === "AWAY" ? "A"
-               : predicted === "DRAW"                             ? "D"
-               : predicted;
+    const pred   = getPrediction(p);
+    const actual = p.ftr?.toUpperCase()?.trim();
+    if (!pred || !actual) return null;
+    const norm = normalizeOutcome(pred.outcome);
+    if (!norm) return null;
     return norm === actual;
   };
 
-  // ── Fixed: read h_attacking, h_defending, h_volatility, h_efficiency directly ──
   const openModal = (team, logo, side, p) => {
     const isHome = side === "home";
+    // Try from the historical match first, fallback to matched prediction
+    const pred = getPrediction(p);
     setModal({
       team,
       side,
       data: {
         logo,
-        attacking:  isHome ? p.h_attacking  : p.a_attacking,
-        defending:  isHome ? p.h_defending  : p.a_defending,
-        volatility: isHome ? p.h_volatility : p.a_volatility,
-        efficiency: isHome ? p.h_efficiency : p.a_efficiency,
+        attacking:  isHome ? (p.h_attacking  ?? pred?.h_attacking)  : (p.a_attacking  ?? pred?.a_attacking),
+        defending:  isHome ? (p.h_defending  ?? pred?.h_defending)  : (p.a_defending  ?? pred?.a_defending),
+        volatility: isHome ? (p.h_volatility ?? pred?.h_volatility) : (p.a_volatility ?? pred?.a_volatility),
+        efficiency: isHome ? (p.h_efficiency ?? pred?.h_efficiency) : (p.a_efficiency ?? pred?.a_efficiency),
       },
     });
   };
@@ -602,7 +639,10 @@ function HistoryTab({ authHeaders, formatDate }) {
       )}
 
       {items.map((p) => {
+        const pred   = getPrediction(p);
         const status = predictionStatus(p);
+        const modelOutcome = pred?.outcome ?? p.outcome ?? null;
+
         return (
           <div key={p.id} className="p-4 bg-slate-900 border border-slate-800 rounded-xl hover:border-slate-700 transition-all space-y-4">
 
@@ -640,30 +680,45 @@ function HistoryTab({ authHeaders, formatDate }) {
             </div>
 
             {/* Model Prediction badge */}
-            {(p.outcome || p.ftr) && (
-              <div className="flex items-center justify-between px-3 py-2.5 rounded-lg bg-slate-800/50 border border-slate-700">
-                <div className="flex items-center gap-2">
-                  <p className="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Model Prediction</p>
+            <div className="flex items-center justify-between px-3 py-2.5 rounded-lg bg-slate-800/50 border border-slate-700">
+              <div className="flex items-center gap-2">
+                <p className="text-[10px] text-slate-500 uppercase font-bold tracking-widest">
+                  Model Prediction
+                </p>
+                {modelOutcome ? (
                   <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${
-                    outcomeLabel(p.outcome) === "Home Win" ? "border-blue-500/40 bg-blue-500/10 text-blue-400"
-                    : outcomeLabel(p.outcome) === "Draw"   ? "border-yellow-500/40 bg-yellow-500/10 text-yellow-400"
+                    outcomeLabel(modelOutcome) === "Home Win" ? "border-blue-500/40 bg-blue-500/10 text-blue-400"
+                    : outcomeLabel(modelOutcome) === "Draw"   ? "border-yellow-500/40 bg-yellow-500/10 text-yellow-400"
                     : "border-purple-500/40 bg-purple-500/10 text-purple-400"
                   }`}>
-                    {outcomeLabel(p.outcome) || "—"}
+                    {outcomeLabel(modelOutcome)}
                   </span>
-                </div>
-
-                {status !== null && (
-                  <div className={`flex items-center gap-1.5 text-xs font-black ${status ? "text-green-400" : "text-red-400"}`}>
-                    {status ? <><CheckCircle size={14} /> Correct</> : <><XCircle size={14} /> Incorrect</>}
-                  </div>
-                )}
-
-                {p.confidence != null && (
-                  <span className="text-[10px] text-slate-500 font-medium">{confPct(p.confidence)}% conf.</span>
+                ) : (
+                  <span className="text-[10px] font-black px-2 py-0.5 rounded-full border border-slate-600 bg-slate-700/50 text-slate-400">
+                    No Prediction
+                  </span>
                 )}
               </div>
-            )}
+
+              {/* Correct / Incorrect — only shown when we have both prediction and result */}
+              {status !== null ? (
+                <div className={`flex items-center gap-1.5 text-xs font-black ${status ? "text-green-400" : "text-red-400"}`}>
+                  {status
+                    ? <><CheckCircle size={14} /> Correct</>
+                    : <><XCircle    size={14} /> Incorrect</>
+                  }
+                </div>
+              ) : (
+                <span className="text-[10px] text-slate-600 font-medium">—</span>
+              )}
+
+              {/* Confidence */}
+              {(pred?.confidence ?? p.confidence) != null && (
+                <span className="text-[10px] text-slate-500 font-medium">
+                  {confPct(pred?.confidence ?? p.confidence)}% conf.
+                </span>
+              )}
+            </div>
 
             {/* Match stats */}
             <div className="space-y-3">
@@ -695,7 +750,11 @@ function HistoryTab({ authHeaders, formatDate }) {
         );
       })}
 
-      {loading && <div className="flex justify-center py-6"><RefreshCw size={20} className="animate-spin text-blue-500" /></div>}
+      {loading && (
+        <div className="flex justify-center py-6">
+          <RefreshCw size={20} className="animate-spin text-blue-500" />
+        </div>
+      )}
 
       {!loading && hasMore && (
         <button
@@ -708,5 +767,7 @@ function HistoryTab({ authHeaders, formatDate }) {
     </div>
   );
 }
+
+
 
 Dashboard.hideFooter = true;
