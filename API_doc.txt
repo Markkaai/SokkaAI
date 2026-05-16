@@ -1,0 +1,1945 @@
+default
+
+
+GET
+/
+Root
+
+Root welcome endpoint.
+
+Parameters
+Cancel
+No parameters
+
+Execute
+Clear
+Responses
+Curl
+
+curl -X 'GET' \
+  'https://elliott888-epl-model.hf.space/' \
+  -H 'accept: application/json'
+Request URL
+https://elliott888-epl-model.hf.space/
+Server response
+Code	Details
+200	
+Response body
+Download
+{
+  "message": "Welcome to SOCCKA AI"
+}
+Response headers
+ access-control-allow-credentials: true 
+ content-length: 34 
+ content-type: application/json 
+ date: Fri,15 May 2026 10:48:52 GMT 
+ link: <https://huggingface.co/spaces/elliott888/EPL_Model>;rel="canonical" 
+ server: uvicorn 
+ vary: origin,access-control-request-method,access-control-request-headers 
+ x-proxied-host: http://10.112.41.223 
+ x-proxied-path: / 
+ x-proxied-replica: 7z2wpau8-bpmtm 
+ x-request-id: _vgpWU 
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+"string"
+No links
+
+GET
+/health
+Health Check
+
+Monitoring endpoint for uptime and service connectivity.
+
+Parameters
+Cancel
+No parameters
+
+Execute
+Clear
+Responses
+Curl
+
+curl -X 'GET' \
+  'https://elliott888-epl-model.hf.space/health' \
+  -H 'accept: application/json'
+Request URL
+https://elliott888-epl-model.hf.space/health
+Server response
+Code	Details
+200	
+Response body
+Download
+{
+  "status": "healthy",
+  "timestamp": "2026-05-15T10:49:00.537113",
+  "services": {
+    "database": "connected",
+    "scheduler": "active",
+    "model_files": "ready"
+  }
+}
+Response headers
+ access-control-allow-credentials: true 
+ content-length: 140 
+ content-type: application/json 
+ date: Fri,15 May 2026 10:49:00 GMT 
+ link: <https://huggingface.co/spaces/elliott888/EPL_Model>;rel="canonical" 
+ server: uvicorn 
+ vary: origin,access-control-request-method,access-control-request-headers 
+ x-proxied-host: http://10.112.41.223 
+ x-proxied-path: /health 
+ x-proxied-replica: 7z2wpau8-bpmtm 
+ x-request-id: _JwEF6 
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+"string"
+No links
+
+POST
+/register
+Register
+
+
+POST
+/login
+Login
+
+
+POST
+/login-json
+Login Json
+
+
+GET
+/user
+Get Current User Profile
+
+
+
+GET
+/user/{user_id}
+Get User
+
+
+
+PUT
+/user/{user_id}
+Update User
+
+
+
+DELETE
+/user/{user_id}
+Delete User
+
+
+
+POST
+/user/{user_id}/photo
+Upload User Profile Photo
+
+
+
+PUT
+/user/{user_id}/photo
+Replace User Profile Photo
+
+
+
+GET
+/notifications
+Get User Notifications
+
+
+
+POST
+/notifications
+Create Notification
+
+
+
+PUT
+/notifications/{notification_id}
+Update Notification
+
+
+
+DELETE
+/notifications/{notification_id}
+Delete Notification
+
+
+
+POST
+/notifications/broadcast
+Broadcast Notification
+
+
+
+GET
+/prediction/{prediction_id}
+Get Prediction
+
+
+Parameters
+Cancel
+Name	Description
+prediction_id *
+integer
+(path)
+721
+Execute
+Clear
+Responses
+Curl
+
+curl -X 'GET' \
+  'https://elliott888-epl-model.hf.space/prediction/721' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJleHAiOjE3Nzg5Mjg1MjJ9.LgfQIW35DQRzIgq0hEuNsMjDUti94JcnTvYE_iB6Fxg'
+Request URL
+https://elliott888-epl-model.hf.space/prediction/721
+Server response
+Code	Details
+200	
+Response body
+Download
+{
+  "id": 721,
+  "match_date": "2026-05-15T19:00:00",
+  "home_team": "Aston Villa",
+  "away_team": "Liverpool",
+  "home_team_logo": "/logos/Aston_Villa.png",
+  "away_team_logo": "/logos/Liverpool.png",
+  "home_team_id": 1,
+  "away_team_id": 11,
+  "avg_h": 2.8,
+  "avg_d": 3.42,
+  "avg_a": 2.42,
+  "h_attacking": 14.187638282775879,
+  "h_defending": 24.66400909423828,
+  "h_volatility": 27.823047637939453,
+  "h_efficiency": 71.59689331054688,
+  "a_attacking": 30.54274559020996,
+  "a_defending": 29.04906463623047,
+  "a_volatility": 29.14753532409668,
+  "a_efficiency": 46.317840576171875,
+  "prob_home": 0.28,
+  "prob_draw": 0.255,
+  "prob_away": 0.465,
+  "outcome": "Away Win",
+  "confidence": 0.465,
+  "user_id": null
+}
+Response headers
+ access-control-allow-credentials: true 
+ content-length: 621 
+ content-type: application/json 
+ date: Fri,15 May 2026 10:50:42 GMT 
+ link: <https://huggingface.co/spaces/elliott888/EPL_Model>;rel="canonical" 
+ server: uvicorn 
+ vary: origin,access-control-request-method,access-control-request-headers 
+ x-proxied-host: http://10.112.41.223 
+ x-proxied-path: /prediction/721 
+ x-proxied-replica: 7z2wpau8-bpmtm 
+ x-request-id: 930acS 
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "id": 0,
+  "match_date": "2026-05-15T10:51:55.097Z",
+  "home_team": "string",
+  "away_team": "string",
+  "home_team_logo": "string",
+  "away_team_logo": "string",
+  "home_team_id": 0,
+  "away_team_id": 0,
+  "avg_h": 0,
+  "avg_d": 0,
+  "avg_a": 0,
+  "h_attacking": 0,
+  "h_defending": 0,
+  "h_volatility": 0,
+  "h_efficiency": 0,
+  "a_attacking": 0,
+  "a_defending": 0,
+  "a_volatility": 0,
+  "a_efficiency": 0,
+  "prob_home": 0,
+  "prob_draw": 0,
+  "prob_away": 0,
+  "outcome": "string",
+  "confidence": 0,
+  "user_id": 0
+}
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string",
+      "input": "string",
+      "ctx": {}
+    }
+  ]
+}
+No links
+
+GET
+/predictions
+Get Predictions
+
+
+Get predictions with pagination. Default limit 20, max 100.
+
+Parameters
+Cancel
+Name	Description
+skip
+integer
+(query)
+0
+limit
+integer
+(query)
+20
+Execute
+Clear
+Responses
+Curl
+
+curl -X 'GET' \
+  'https://elliott888-epl-model.hf.space/predictions?skip=0&limit=20' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJleHAiOjE3Nzg5Mjg1MjJ9.LgfQIW35DQRzIgq0hEuNsMjDUti94JcnTvYE_iB6Fxg'
+Request URL
+https://elliott888-epl-model.hf.space/predictions?skip=0&limit=20
+Server response
+Code	Details
+200	
+Response body
+Download
+{
+  "items": [
+    {
+      "id": 721,
+      "away_team": "Liverpool",
+      "h_attacking": 14.187638282775879,
+      "prob_home": 0.28,
+      "home_team_logo": "/logos/Aston_Villa.png",
+      "h_defending": 24.66400909423828,
+      "prob_draw": 0.255,
+      "away_team_logo": "/logos/Liverpool.png",
+      "h_volatility": 27.823047637939453,
+      "prob_away": 0.465,
+      "home_team_id": 1,
+      "h_efficiency": 71.59689331054688,
+      "outcome": "Away Win",
+      "away_team_id": 11,
+      "a_attacking": 30.54274559020996,
+      "confidence": 0.465,
+      "avg_h": 2.8,
+      "a_defending": 29.04906463623047,
+      "user_id": null,
+      "match_date": "2026-05-15T19:00:00",
+      "avg_d": 3.42,
+      "a_volatility": 29.14753532409668,
+      "home_team": "Aston Villa",
+      "avg_a": 2.42,
+      "a_efficiency": 46.317840576171875
+    },
+    {
+      "id": 722,
+      "away_team": "Nott'm Forest",
+      "h_attacking": 29.019350051879883,
+      "prob_home": 0.416,
+      "home_team_logo": "/logos/Manchester_United.png",
+      "h_defending": 28.664094924926758,
+      "prob_draw": 0.218,
+      "away_team_logo": "/logos/Nottingham_Forest.png",
+      "h_volatility": 9.238269805908203,
+      "prob_away": 0.365,
+      "home_team_id": 13,
+      "h_efficiency": 83.6261215209961,
+      "outcome": "Home Win",
+      "away_team_id": 15,
+      "a_attacking": 13.582736015319824,
+      "confidence": 0.416,
+      "avg_h": 1.59,
+      "a_defending": 56.34271240234375,
+      "user_id": null,
+      "match_date": "2026-05-17T11:30:00",
+      "avg_d": 4.23,
+      "a_volatility": 15.379323959350586,
+      "home_team": "Man United",
+      "avg_a": 4.97,
+      "a_efficiency": 37.713592529296875
+    },
+    {
+      "id": 723,
+      "away_team": "Crystal Palace",
+      "h_attacking": 24.983551025390625,
+      "prob_home": 0.41,
+      "home_team_logo": "/logos/Brentford.png",
+      "h_defending": 39.87974548339844,
+      "prob_draw": 0.198,
+      "away_team_logo": "/logos/Crystal_Palace.png",
+      "h_volatility": 45.2115478515625,
+      "prob_away": 0.392,
+      "home_team_id": 3,
+      "h_efficiency": 46.54344940185547,
+      "outcome": "Home Win",
+      "away_team_id": 7,
+      "a_attacking": 26.500736236572266,
+      "confidence": 0.41,
+      "avg_h": 1.71,
+      "a_defending": 76.98460388183594,
+      "user_id": null,
+      "match_date": "2026-05-17T14:00:00",
+      "avg_d": 4.09,
+      "a_volatility": 60.44232940673828,
+      "home_team": "Brentford",
+      "avg_a": 4.29,
+      "a_efficiency": 38.84206008911133
+    },
+    {
+      "id": 724,
+      "away_team": "Sunderland",
+      "h_attacking": 25.42088508605957,
+      "prob_home": 0.399,
+      "home_team_logo": "/logos/Everton.png",
+      "h_defending": 51.187538146972656,
+      "prob_draw": 0.229,
+      "away_team_logo": "/logos/Sunderland.png",
+      "h_volatility": 28.33196449279785,
+      "prob_away": 0.371,
+      "home_team_id": 8,
+      "h_efficiency": 78.99747467041016,
+      "outcome": "Home Win",
+      "away_team_id": 16,
+      "a_attacking": 29.917692184448242,
+      "confidence": 0.399,
+      "avg_h": 1.82,
+      "a_defending": 65.49750518798828,
+      "user_id": null,
+      "match_date": "2026-05-17T14:00:00",
+      "avg_d": 3.6,
+      "a_volatility": 53.283912658691406,
+      "home_team": "Everton",
+      "avg_a": 4.24,
+      "a_efficiency": 30.178916931152344
+    },
+    {
+      "id": 725,
+      "away_team": "Brighton",
+      "h_attacking": 66.18806457519531,
+      "prob_home": 0.306,
+      "home_team_logo": "/logos/Leeds_United.png",
+      "h_defending": 51.83203125,
+      "prob_draw": 0.215,
+      "away_team_logo": "/logos/Brighton.png",
+      "h_volatility": 11.19625186920166,
+      "prob_away": 0.48,
+      "home_team_id": 10,
+      "h_efficiency": 26.48627471923828,
+      "outcome": "Away Win",
+      "away_team_id": 4,
+      "a_attacking": 25.145511627197266,
+      "confidence": 0.48,
+      "avg_h": 3.14,
+      "a_defending": 83.17402648925781,
+      "user_id": null,
+      "match_date": "2026-05-17T14:00:00",
+      "avg_d": 3.54,
+      "a_volatility": 7.540077209472656,
+      "home_team": "Leeds",
+      "avg_a": 2.15,
+      "a_efficiency": 28.577926635742188
+    },
+    {
+      "id": 726,
+      "away_team": "Fulham",
+      "h_attacking": 41.72217559814453,
+      "prob_home": 0.29,
+      "home_team_logo": "/logos/Wolverhampton_Wanderers.png",
+      "h_defending": 50.1090087890625,
+      "prob_draw": 0.221,
+      "away_team_logo": "/logos/Fulham.png",
+      "h_volatility": 26.262710571289062,
+      "prob_away": 0.489,
+      "home_team_id": 19,
+      "h_efficiency": 68.22650146484375,
+      "outcome": "Away Win",
+      "away_team_id": 9,
+      "a_attacking": 49.40619659423828,
+      "confidence": 0.489,
+      "avg_h": 3.72,
+      "a_defending": 77.18388366699219,
+      "user_id": null,
+      "match_date": "2026-05-17T14:00:00",
+      "avg_d": 3.79,
+      "a_volatility": 35.834903717041016,
+      "home_team": "Wolves",
+      "avg_a": 1.88,
+      "a_efficiency": 18.32275390625
+    },
+    {
+      "id": 727,
+      "away_team": "West Ham",
+      "h_attacking": 39.04099655151367,
+      "prob_home": 0.369,
+      "home_team_logo": "/logos/Newcastle_United.png",
+      "h_defending": 34.554298400878906,
+      "prob_draw": 0.24,
+      "away_team_logo": "/logos/West_Ham.png",
+      "h_volatility": 9.572525978088379,
+      "prob_away": 0.391,
+      "home_team_id": 14,
+      "h_efficiency": 78.41102600097656,
+      "outcome": "Away Win",
+      "away_team_id": 18,
+      "a_attacking": 44.6658935546875,
+      "confidence": 0.391,
+      "avg_h": 2.07,
+      "a_defending": 52.49061584472656,
+      "user_id": null,
+      "match_date": "2026-05-17T16:30:00",
+      "avg_d": 3.75,
+      "a_volatility": 56.46898651123047,
+      "home_team": "Newcastle",
+      "avg_a": 3.19,
+      "a_efficiency": 44.265663146972656
+    },
+    {
+      "id": 728,
+      "away_team": "Burnley",
+      "h_attacking": 50,
+      "prob_home": 0.46,
+      "home_team_logo": "/logos/Arsenal.png",
+      "h_defending": 2.991661787033081,
+      "prob_draw": 0.291,
+      "away_team_logo": "/logos/Burnley.png",
+      "h_volatility": 6.902568817138672,
+      "prob_away": 0.249,
+      "home_team_id": 0,
+      "h_efficiency": 44.27970886230469,
+      "outcome": "Home Win",
+      "away_team_id": 5,
+      "a_attacking": 68.97640991210938,
+      "confidence": 0.46,
+      "avg_h": 1.09,
+      "a_defending": 52.77113342285156,
+      "user_id": null,
+      "match_date": "2026-05-18T19:00:00",
+      "avg_d": 10.82,
+      "a_volatility": 32.28257369995117,
+      "home_team": "Arsenal",
+      "avg_a": 23.6,
+      "a_efficiency": 74.13288879394531
+    },
+    {
+      "id": 729,
+      "away_team": "Man City",
+      "h_attacking": 26.390491485595703,
+      "prob_home": 0.265,
+      "home_team_logo": "/logos/Bournemouth.png",
+      "h_defending": 52.20392608642578,
+      "prob_draw": 0.282,
+      "away_team_logo": "/logos/Manchester_City.png",
+      "h_volatility": 9.685881614685059,
+      "prob_away": 0.453,
+      "home_team_id": 2,
+      "h_efficiency": 60.431819915771484,
+      "outcome": "Away Win",
+      "away_team_id": 12,
+      "a_attacking": 29.44036102294922,
+      "confidence": 0.453,
+      "avg_h": 4.33,
+      "a_defending": 73.81222534179688,
+      "user_id": null,
+      "match_date": "2026-05-19T18:30:00",
+      "avg_d": 4.04,
+      "a_volatility": 45.758792877197266,
+      "home_team": "Bournemouth",
+      "avg_a": 1.68,
+      "a_efficiency": 42.15342712402344
+    },
+    {
+      "id": 730,
+      "away_team": "Tottenham",
+      "h_attacking": 30.584428787231445,
+      "prob_home": 0.363,
+      "home_team_logo": "/logos/Chelsea.png",
+      "h_defending": 67.67802429199219,
+      "prob_draw": 0.223,
+      "away_team_logo": "/logos/Tottenham_Hotspur.png",
+      "h_volatility": 20.306045532226562,
+      "prob_away": 0.414,
+      "home_team_id": 6,
+      "h_efficiency": 63.27934265136719,
+      "outcome": "Away Win",
+      "away_team_id": 17,
+      "a_attacking": 56.26214599609375,
+      "confidence": 0.414,
+      "avg_h": 2.07,
+      "a_defending": 78.22467041015625,
+      "user_id": null,
+      "match_date": "2026-05-19T19:15:00",
+      "avg_d": 3.69,
+      "a_volatility": 43.667205810546875,
+      "home_team": "Chelsea",
+      "avg_a": 3.2,
+      "a_efficiency": 35.44890594482422
+    }
+  ],
+  "total": 10,
+  "skip": 0,
+  "limit": 20
+}
+Response headers
+ access-control-allow-credentials: true 
+ content-length: 6246 
+ content-type: application/json 
+ date: Fri,15 May 2026 10:50:28 GMT 
+ link: <https://huggingface.co/spaces/elliott888/EPL_Model>;rel="canonical" 
+ server: uvicorn 
+ vary: origin,access-control-request-method,access-control-request-headers 
+ x-proxied-host: http://10.112.41.223 
+ x-proxied-path: /predictions?skip=0&limit=20 
+ x-proxied-replica: 7z2wpau8-bpmtm 
+ x-request-id: UBghrs 
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+"string"
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string",
+      "input": "string",
+      "ctx": {}
+    }
+  ]
+}
+No links
+
+GET
+/prediction-history
+Get Prediction History
+
+
+Get prediction history with pagination.
+
+Parameters
+Cancel
+Name	Description
+skip
+integer
+(query)
+0
+limit
+integer
+(query)
+20
+Execute
+Clear
+Responses
+Curl
+
+curl -X 'GET' \
+  'https://elliott888-epl-model.hf.space/prediction-history?skip=0&limit=20' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJleHAiOjE3Nzg5Mjg1MjJ9.LgfQIW35DQRzIgq0hEuNsMjDUti94JcnTvYE_iB6Fxg'
+Request URL
+https://elliott888-epl-model.hf.space/prediction-history?skip=0&limit=20
+Server response
+Code	Details
+200	
+Response body
+Download
+{
+  "items": [
+    {
+      "away_team": "Tottenham",
+      "h_attacking": 30.584428787231445,
+      "a_efficiency": 35.44890594482422,
+      "model_was_correct": null,
+      "home_team_logo": "/logos/Chelsea.png",
+      "h_defending": 67.67802429199219,
+      "prob_home": 0.363,
+      "created_at": "2026-05-15T10:02:48.536176",
+      "id": 730,
+      "away_team_logo": "/logos/Tottenham_Hotspur.png",
+      "h_volatility": 20.306045532226562,
+      "prob_draw": 0.223,
+      "home_team_id": 6,
+      "h_efficiency": 63.27934265136719,
+      "prob_away": 0.414,
+      "match_date": "2026-05-19T19:15:00",
+      "away_team_id": 17,
+      "a_attacking": 56.26214599609375,
+      "outcome": "Away Win",
+      "avg_h": 2.07,
+      "a_defending": 78.22467041015625,
+      "confidence": 0.414,
+      "avg_d": 3.69,
+      "a_volatility": 43.667205810546875,
+      "actual_result": null,
+      "home_team": "Chelsea",
+      "avg_a": 3.2
+    },
+    {
+      "away_team": "Man City",
+      "h_attacking": 26.390491485595703,
+      "a_efficiency": 42.15342712402344,
+      "model_was_correct": null,
+      "home_team_logo": "/logos/Bournemouth.png",
+      "h_defending": 52.20392608642578,
+      "prob_home": 0.265,
+      "created_at": "2026-05-15T10:02:48.536172",
+      "id": 729,
+      "away_team_logo": "/logos/Manchester_City.png",
+      "h_volatility": 9.685881614685059,
+      "prob_draw": 0.282,
+      "home_team_id": 2,
+      "h_efficiency": 60.431819915771484,
+      "prob_away": 0.453,
+      "match_date": "2026-05-19T18:30:00",
+      "away_team_id": 12,
+      "a_attacking": 29.44036102294922,
+      "outcome": "Away Win",
+      "avg_h": 4.33,
+      "a_defending": 73.81222534179688,
+      "confidence": 0.453,
+      "avg_d": 4.04,
+      "a_volatility": 45.758792877197266,
+      "actual_result": null,
+      "home_team": "Bournemouth",
+      "avg_a": 1.68
+    },
+    {
+      "away_team": "Burnley",
+      "h_attacking": 50,
+      "a_efficiency": 74.13288879394531,
+      "model_was_correct": null,
+      "home_team_logo": "/logos/Arsenal.png",
+      "h_defending": 2.991661787033081,
+      "prob_home": 0.46,
+      "created_at": "2026-05-15T10:02:48.536168",
+      "id": 728,
+      "away_team_logo": "/logos/Burnley.png",
+      "h_volatility": 6.902568817138672,
+      "prob_draw": 0.291,
+      "home_team_id": 0,
+      "h_efficiency": 44.27970886230469,
+      "prob_away": 0.249,
+      "match_date": "2026-05-18T19:00:00",
+      "away_team_id": 5,
+      "a_attacking": 68.97640991210938,
+      "outcome": "Home Win",
+      "avg_h": 1.09,
+      "a_defending": 52.77113342285156,
+      "confidence": 0.46,
+      "avg_d": 10.82,
+      "a_volatility": 32.28257369995117,
+      "actual_result": null,
+      "home_team": "Arsenal",
+      "avg_a": 23.6
+    },
+    {
+      "away_team": "West Ham",
+      "h_attacking": 39.04099655151367,
+      "a_efficiency": 44.265663146972656,
+      "model_was_correct": null,
+      "home_team_logo": "/logos/Newcastle_United.png",
+      "h_defending": 34.554298400878906,
+      "prob_home": 0.369,
+      "created_at": "2026-05-15T10:02:48.536164",
+      "id": 727,
+      "away_team_logo": "/logos/West_Ham.png",
+      "h_volatility": 9.572525978088379,
+      "prob_draw": 0.24,
+      "home_team_id": 14,
+      "h_efficiency": 78.41102600097656,
+      "prob_away": 0.391,
+      "match_date": "2026-05-17T16:30:00",
+      "away_team_id": 18,
+      "a_attacking": 44.6658935546875,
+      "outcome": "Away Win",
+      "avg_h": 2.07,
+      "a_defending": 52.49061584472656,
+      "confidence": 0.391,
+      "avg_d": 3.75,
+      "a_volatility": 56.46898651123047,
+      "actual_result": null,
+      "home_team": "Newcastle",
+      "avg_a": 3.19
+    },
+    {
+      "away_team": "Fulham",
+      "h_attacking": 41.72217559814453,
+      "a_efficiency": 18.32275390625,
+      "model_was_correct": null,
+      "home_team_logo": "/logos/Wolverhampton_Wanderers.png",
+      "h_defending": 50.1090087890625,
+      "prob_home": 0.29,
+      "created_at": "2026-05-15T10:02:48.536159",
+      "id": 726,
+      "away_team_logo": "/logos/Fulham.png",
+      "h_volatility": 26.262710571289062,
+      "prob_draw": 0.221,
+      "home_team_id": 19,
+      "h_efficiency": 68.22650146484375,
+      "prob_away": 0.489,
+      "match_date": "2026-05-17T14:00:00",
+      "away_team_id": 9,
+      "a_attacking": 49.40619659423828,
+      "outcome": "Away Win",
+      "avg_h": 3.72,
+      "a_defending": 77.18388366699219,
+      "confidence": 0.489,
+      "avg_d": 3.79,
+      "a_volatility": 35.834903717041016,
+      "actual_result": null,
+      "home_team": "Wolves",
+      "avg_a": 1.88
+    },
+    {
+      "away_team": "Brighton",
+      "h_attacking": 66.18806457519531,
+      "a_efficiency": 28.577926635742188,
+      "model_was_correct": null,
+      "home_team_logo": "/logos/Leeds_United.png",
+      "h_defending": 51.83203125,
+      "prob_home": 0.306,
+      "created_at": "2026-05-15T10:02:48.536155",
+      "id": 725,
+      "away_team_logo": "/logos/Brighton.png",
+      "h_volatility": 11.19625186920166,
+      "prob_draw": 0.215,
+      "home_team_id": 10,
+      "h_efficiency": 26.48627471923828,
+      "prob_away": 0.48,
+      "match_date": "2026-05-17T14:00:00",
+      "away_team_id": 4,
+      "a_attacking": 25.145511627197266,
+      "outcome": "Away Win",
+      "avg_h": 3.14,
+      "a_defending": 83.17402648925781,
+      "confidence": 0.48,
+      "avg_d": 3.54,
+      "a_volatility": 7.540077209472656,
+      "actual_result": null,
+      "home_team": "Leeds",
+      "avg_a": 2.15
+    },
+    {
+      "away_team": "Sunderland",
+      "h_attacking": 25.42088508605957,
+      "a_efficiency": 30.178916931152344,
+      "model_was_correct": null,
+      "home_team_logo": "/logos/Everton.png",
+      "h_defending": 51.187538146972656,
+      "prob_home": 0.399,
+      "created_at": "2026-05-15T10:02:48.536151",
+      "id": 724,
+      "away_team_logo": "/logos/Sunderland.png",
+      "h_volatility": 28.33196449279785,
+      "prob_draw": 0.229,
+      "home_team_id": 8,
+      "h_efficiency": 78.99747467041016,
+      "prob_away": 0.371,
+      "match_date": "2026-05-17T14:00:00",
+      "away_team_id": 16,
+      "a_attacking": 29.917692184448242,
+      "outcome": "Home Win",
+      "avg_h": 1.82,
+      "a_defending": 65.49750518798828,
+      "confidence": 0.399,
+      "avg_d": 3.6,
+      "a_volatility": 53.283912658691406,
+      "actual_result": null,
+      "home_team": "Everton",
+      "avg_a": 4.24
+    },
+    {
+      "away_team": "Crystal Palace",
+      "h_attacking": 24.983551025390625,
+      "a_efficiency": 38.84206008911133,
+      "model_was_correct": null,
+      "home_team_logo": "/logos/Brentford.png",
+      "h_defending": 39.87974548339844,
+      "prob_home": 0.41,
+      "created_at": "2026-05-15T10:02:48.536146",
+      "id": 723,
+      "away_team_logo": "/logos/Crystal_Palace.png",
+      "h_volatility": 45.2115478515625,
+      "prob_draw": 0.198,
+      "home_team_id": 3,
+      "h_efficiency": 46.54344940185547,
+      "prob_away": 0.392,
+      "match_date": "2026-05-17T14:00:00",
+      "away_team_id": 7,
+      "a_attacking": 26.500736236572266,
+      "outcome": "Home Win",
+      "avg_h": 1.71,
+      "a_defending": 76.98460388183594,
+      "confidence": 0.41,
+      "avg_d": 4.09,
+      "a_volatility": 60.44232940673828,
+      "actual_result": null,
+      "home_team": "Brentford",
+      "avg_a": 4.29
+    },
+    {
+      "away_team": "Nott'm Forest",
+      "h_attacking": 29.019350051879883,
+      "a_efficiency": 37.713592529296875,
+      "model_was_correct": null,
+      "home_team_logo": "/logos/Manchester_United.png",
+      "h_defending": 28.664094924926758,
+      "prob_home": 0.416,
+      "created_at": "2026-05-15T10:02:48.536142",
+      "id": 722,
+      "away_team_logo": "/logos/Nottingham_Forest.png",
+      "h_volatility": 9.238269805908203,
+      "prob_draw": 0.218,
+      "home_team_id": 13,
+      "h_efficiency": 83.6261215209961,
+      "prob_away": 0.365,
+      "match_date": "2026-05-17T11:30:00",
+      "away_team_id": 15,
+      "a_attacking": 13.582736015319824,
+      "outcome": "Home Win",
+      "avg_h": 1.59,
+      "a_defending": 56.34271240234375,
+      "confidence": 0.416,
+      "avg_d": 4.23,
+      "a_volatility": 15.379323959350586,
+      "actual_result": null,
+      "home_team": "Man United",
+      "avg_a": 4.97
+    },
+    {
+      "away_team": "Liverpool",
+      "h_attacking": 14.187638282775879,
+      "a_efficiency": 46.317840576171875,
+      "model_was_correct": null,
+      "home_team_logo": "/logos/Aston_Villa.png",
+      "h_defending": 24.66400909423828,
+      "prob_home": 0.28,
+      "created_at": "2026-05-15T10:02:48.536132",
+      "id": 721,
+      "away_team_logo": "/logos/Liverpool.png",
+      "h_volatility": 27.823047637939453,
+      "prob_draw": 0.255,
+      "home_team_id": 1,
+      "h_efficiency": 71.59689331054688,
+      "prob_away": 0.465,
+      "match_date": "2026-05-15T19:00:00",
+      "away_team_id": 11,
+      "a_attacking": 30.54274559020996,
+      "outcome": "Away Win",
+      "avg_h": 2.8,
+      "a_defending": 29.04906463623047,
+      "confidence": 0.465,
+      "avg_d": 3.42,
+      "a_volatility": 29.14753532409668,
+      "actual_result": null,
+      "home_team": "Aston Villa",
+      "avg_a": 2.42
+    },
+    {
+      "away_team": "Crystal Palace",
+      "h_attacking": 30.73605728149414,
+      "a_efficiency": 37.44218826293945,
+      "model_was_correct": true,
+      "home_team_logo": "/logos/Manchester_City.png",
+      "h_defending": 37.22955322265625,
+      "prob_home": 0.443,
+      "created_at": "2026-05-13T16:06:05.054354",
+      "id": 671,
+      "away_team_logo": "/logos/Crystal_Palace.png",
+      "h_volatility": 54.730140686035156,
+      "prob_draw": 0.194,
+      "home_team_id": 12,
+      "h_efficiency": 50.555118560791016,
+      "prob_away": 0.363,
+      "match_date": "2026-05-13T19:00:00",
+      "away_team_id": 7,
+      "a_attacking": 25.766279220581055,
+      "outcome": "Home Win",
+      "avg_h": 1.23,
+      "a_defending": 57.825897216796875,
+      "confidence": 0.443,
+      "avg_d": 6.63,
+      "a_volatility": 40.9046630859375,
+      "actual_result": "H",
+      "home_team": "Man City",
+      "avg_a": 10.48
+    },
+    {
+      "away_team": "Leeds",
+      "h_attacking": 32.769432067871094,
+      "a_efficiency": 32.263084411621094,
+      "model_was_correct": false,
+      "home_team_logo": "/logos/Tottenham_Hotspur.png",
+      "h_defending": 38.56029510498047,
+      "prob_home": 0.413,
+      "created_at": "2026-05-11T16:04:58.362196",
+      "id": 601,
+      "away_team_logo": "/logos/Leeds_United.png",
+      "h_volatility": 51.887901306152344,
+      "prob_draw": 0.214,
+      "home_team_id": 17,
+      "h_efficiency": 83.75890350341797,
+      "prob_away": 0.373,
+      "match_date": "2026-05-11T19:00:00",
+      "away_team_id": 10,
+      "a_attacking": 29.287425994873047,
+      "outcome": "Home Win",
+      "avg_h": 1.77,
+      "a_defending": 52.59095764160156,
+      "confidence": 0.413,
+      "avg_d": 3.8,
+      "a_volatility": 53.22206497192383,
+      "actual_result": "D",
+      "home_team": "Tottenham",
+      "avg_a": 4.33
+    },
+    {
+      "away_team": "Arsenal",
+      "h_attacking": 27.744733810424805,
+      "a_efficiency": 52.82452392578125,
+      "model_was_correct": true,
+      "home_team_logo": "/logos/West_Ham.png",
+      "h_defending": 46.45030212402344,
+      "prob_home": 0.318,
+      "created_at": "2026-05-10T12:12:06.959502",
+      "id": 554,
+      "away_team_logo": "/logos/Arsenal.png",
+      "h_volatility": 39.167686462402344,
+      "prob_draw": 0.183,
+      "home_team_id": 18,
+      "h_efficiency": 79.13585662841797,
+      "prob_away": 0.499,
+      "match_date": "2026-05-10T15:30:00",
+      "away_team_id": 0,
+      "a_attacking": 40.14814758300781,
+      "outcome": "Away Win",
+      "avg_h": 5.84,
+      "a_defending": 53.43757629394531,
+      "confidence": 0.499,
+      "avg_d": 4.22,
+      "a_volatility": 28.918296813964844,
+      "actual_result": "A",
+      "home_team": "West Ham",
+      "avg_a": 1.54
+    },
+    {
+      "away_team": "Newcastle",
+      "h_attacking": 41.124568939208984,
+      "a_efficiency": 53.54990768432617,
+      "model_was_correct": false,
+      "home_team_logo": "/logos/Nottingham_Forest.png",
+      "h_defending": 36.16954040527344,
+      "prob_home": 0.339,
+      "created_at": "2026-05-10T12:12:06.959500",
+      "id": 553,
+      "away_team_logo": "/logos/Newcastle_United.png",
+      "h_volatility": 31.171424865722656,
+      "prob_draw": 0.232,
+      "home_team_id": 15,
+      "h_efficiency": 61.51032257080078,
+      "prob_away": 0.43,
+      "match_date": "2026-05-10T13:00:00",
+      "away_team_id": 14,
+      "a_attacking": 39.761802673339844,
+      "outcome": "Away Win",
+      "avg_h": 3.07,
+      "a_defending": 65.53208923339844,
+      "confidence": 0.43,
+      "avg_d": 3.47,
+      "a_volatility": 26.080909729003906,
+      "actual_result": "D",
+      "home_team": "Nott'm Forest",
+      "avg_a": 2.24
+    },
+    {
+      "away_team": "Aston Villa",
+      "h_attacking": 24.773021697998047,
+      "a_efficiency": 50.247894287109375,
+      "model_was_correct": false,
+      "home_team_logo": "/logos/Burnley.png",
+      "h_defending": 34.280643463134766,
+      "prob_home": 0.293,
+      "created_at": "2026-05-10T12:12:06.959497",
+      "id": 552,
+      "away_team_logo": "/logos/Aston_Villa.png",
+      "h_volatility": 34.56578063964844,
+      "prob_draw": 0.223,
+      "home_team_id": 5,
+      "h_efficiency": 64.41808319091797,
+      "prob_away": 0.484,
+      "match_date": "2026-05-10T13:00:00",
+      "away_team_id": 1,
+      "a_attacking": 16.866846084594727,
+      "outcome": "Away Win",
+      "avg_h": 6.21,
+      "a_defending": 53.709877014160156,
+      "confidence": 0.484,
+      "avg_d": 4.42,
+      "a_volatility": 26.452373504638672,
+      "actual_result": "D",
+      "home_team": "Burnley",
+      "avg_a": 1.48
+    },
+    {
+      "away_team": "Everton",
+      "h_attacking": 43.59607696533203,
+      "a_efficiency": 80.62822723388672,
+      "model_was_correct": false,
+      "home_team_logo": "/logos/Crystal_Palace.png",
+      "h_defending": 36.47224426269531,
+      "prob_home": 0.308,
+      "created_at": "2026-05-10T12:12:06.959489",
+      "id": 551,
+      "away_team_logo": "/logos/Everton.png",
+      "h_volatility": 33.0958137512207,
+      "prob_draw": 0.29,
+      "home_team_id": 7,
+      "h_efficiency": 70.31373596191406,
+      "prob_away": 0.402,
+      "match_date": "2026-05-10T13:00:00",
+      "away_team_id": 8,
+      "a_attacking": 48.176544189453125,
+      "outcome": "Away Win",
+      "avg_h": 2.8,
+      "a_defending": 82.18721008300781,
+      "confidence": 0.402,
+      "avg_d": 3.21,
+      "a_volatility": 52.294471740722656,
+      "actual_result": "D",
+      "home_team": "Crystal Palace",
+      "avg_a": 2.55
+    },
+    {
+      "away_team": "Brentford",
+      "h_attacking": 25.659252166748047,
+      "a_efficiency": 27.907724380493164,
+      "model_was_correct": true,
+      "home_team_logo": "/logos/Manchester_City.png",
+      "h_defending": 30.42635726928711,
+      "prob_home": 0.415,
+      "created_at": "2026-05-09T16:04:00.325463",
+      "id": 475,
+      "away_team_logo": "/logos/Brentford.png",
+      "h_volatility": 30.864238739013672,
+      "prob_draw": 0.235,
+      "home_team_id": 12,
+      "h_efficiency": 25,
+      "prob_away": 0.35,
+      "match_date": "2026-05-09T16:30:00",
+      "away_team_id": 3,
+      "a_attacking": 75,
+      "outcome": "Home Win",
+      "avg_h": 1.36,
+      "a_defending": 17.8006591796875,
+      "confidence": 0.415,
+      "avg_d": 5.44,
+      "a_volatility": 63.77740478515625,
+      "actual_result": "H",
+      "home_team": "Man City",
+      "avg_a": 7.35
+    },
+    {
+      "away_team": "Wolves",
+      "h_attacking": 43.15068054199219,
+      "a_efficiency": 41.068458557128906,
+      "model_was_correct": false,
+      "home_team_logo": "/logos/Brighton.png",
+      "h_defending": 40.94869613647461,
+      "prob_home": 0.377,
+      "created_at": "2026-05-09T16:04:00.325459",
+      "id": 474,
+      "away_team_logo": "/logos/Wolverhampton_Wanderers.png",
+      "h_volatility": 35.798912048339844,
+      "prob_draw": 0.214,
+      "home_team_id": 4,
+      "h_efficiency": 65.48857116699219,
+      "prob_away": 0.408,
+      "match_date": "2026-05-09T14:00:00",
+      "away_team_id": 19,
+      "a_attacking": 21.67963981628418,
+      "outcome": "Away Win",
+      "avg_h": 2.3,
+      "a_defending": 65.64569091796875,
+      "confidence": 0.408,
+      "avg_d": 3.3,
+      "a_volatility": 2.7169933319091797,
+      "actual_result": "H",
+      "home_team": "Brighton",
+      "avg_a": 3
+    },
+    {
+      "away_team": "Man United",
+      "h_attacking": 21.08984375,
+      "a_efficiency": 34.25432205200195,
+      "model_was_correct": false,
+      "home_team_logo": "/logos/Sunderland_AFC.png",
+      "h_defending": 42.32864761352539,
+      "prob_home": 0.344,
+      "created_at": "2026-05-09T16:04:00.325455",
+      "id": 473,
+      "away_team_logo": "/logos/Manchester_United.png",
+      "h_volatility": 1.3247931003570557,
+      "prob_draw": 0.204,
+      "home_team_id": 16,
+      "h_efficiency": 61.31956481933594,
+      "prob_away": 0.452,
+      "match_date": "2026-05-09T14:00:00",
+      "away_team_id": 13,
+      "a_attacking": 32.57094955444336,
+      "outcome": "Away Win",
+      "avg_h": 53.02,
+      "a_defending": 69.40396118164062,
+      "confidence": 0.452,
+      "avg_d": 1.04,
+      "a_volatility": 11.87845230102539,
+      "actual_result": "D",
+      "home_team": "Sunderland",
+      "avg_a": 44.68
+    },
+    {
+      "away_team": "Bournemouth",
+      "h_attacking": 34.424476623535156,
+      "a_efficiency": 50.024635314941406,
+      "model_was_correct": true,
+      "home_team_logo": "/logos/Fulham.png",
+      "h_defending": 60.602996826171875,
+      "prob_home": 0.303,
+      "created_at": "2026-05-09T16:04:00.325451",
+      "id": 472,
+      "away_team_logo": "/logos/Bournemouth.png",
+      "h_volatility": 32.013092041015625,
+      "prob_draw": 0.19,
+      "home_team_id": 9,
+      "h_efficiency": 77.78579711914062,
+      "prob_away": 0.506,
+      "match_date": "2026-05-09T14:00:00",
+      "away_team_id": 2,
+      "a_attacking": 21.702999114990234,
+      "outcome": "Away Win",
+      "avg_h": 336.74,
+      "a_defending": 70.00581359863281,
+      "confidence": 0.506,
+      "avg_d": 16.47,
+      "a_volatility": 17.456226348876953,
+      "actual_result": "A",
+      "home_team": "Fulham",
+      "avg_a": 1.02
+    }
+  ],
+  "total": 32,
+  "skip": 0,
+  "limit": 20
+}
+Response headers
+ access-control-allow-credentials: true 
+ content-length: 13937 
+ content-type: application/json 
+ date: Fri,15 May 2026 10:50:58 GMT 
+ link: <https://huggingface.co/spaces/elliott888/EPL_Model>;rel="canonical" 
+ server: uvicorn 
+ vary: origin,access-control-request-method,access-control-request-headers 
+ x-proxied-host: http://10.112.41.223 
+ x-proxied-path: /prediction-history?skip=0&limit=20 
+ x-proxied-replica: 7z2wpau8-bpmtm 
+ x-request-id: 06OqiU 
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+"string"
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string",
+      "input": "string",
+      "ctx": {}
+    }
+  ]
+}
+No links
+
+GET
+/prediction-accuracy
+Get Prediction Accuracy
+
+
+Get comprehensive prediction accuracy statistics for the last 10 matches.
+
+Parameters
+Cancel
+No parameters
+
+Execute
+Clear
+Responses
+Curl
+
+curl -X 'GET' \
+  'https://elliott888-epl-model.hf.space/prediction-accuracy' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJleHAiOjE3Nzg5Mjg1MjJ9.LgfQIW35DQRzIgq0hEuNsMjDUti94JcnTvYE_iB6Fxg'
+Request URL
+https://elliott888-epl-model.hf.space/prediction-accuracy
+Server response
+Code	Details
+200	
+Response body
+Download
+{
+  "total_predictions_analyzed": 19,
+  "correct_predictions": 9,
+  "overall_accuracy": 47.37,
+  "home_win_accuracy": 75,
+  "draw_accuracy": 0,
+  "away_win_accuracy": 27.27,
+  "high_confidence_accuracy": 0,
+  "high_confidence_predictions": 0,
+  "recent_accuracy_30_days": 47.37,
+  "recent_predictions_count": 19,
+  "last_updated": "2026-05-15T10:51:10.821249",
+  "error": null
+}
+Response headers
+ access-control-allow-credentials: true 
+ content-length: 335 
+ content-type: application/json 
+ date: Fri,15 May 2026 10:51:10 GMT 
+ link: <https://huggingface.co/spaces/elliott888/EPL_Model>;rel="canonical" 
+ server: uvicorn 
+ vary: origin,access-control-request-method,access-control-request-headers 
+ x-proxied-host: http://10.112.41.223 
+ x-proxied-path: /prediction-accuracy 
+ x-proxied-replica: 7z2wpau8-bpmtm 
+ x-request-id: SKqDkw 
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+{
+  "total_predictions_analyzed": 0,
+  "correct_predictions": 0,
+  "overall_accuracy": 0,
+  "home_win_accuracy": 0,
+  "draw_accuracy": 0,
+  "away_win_accuracy": 0,
+  "high_confidence_accuracy": 0,
+  "high_confidence_predictions": 0,
+  "recent_accuracy_30_days": 0,
+  "recent_predictions_count": 0,
+  "last_updated": "string",
+  "error": "string"
+}
+No links
+
+POST
+/prediction-accuracy/refresh
+Refresh Prediction Accuracy
+
+
+
+GET
+/historical-matches
+Get Historical Matches
+
+
+
+POST
+/run-inference
+Trigger Inference
+
+
+
+POST
+/logout
+Logout
+
+
+
+GET
+/users
+Get Users
+
+
+
+GET
+/audit-logs
+Get Audit Logs
+
+
+
+GET
+/system-logs
+Get System Logs
+
+
+
+GET
+/standings
+Get Standings
+
+
+Retrieve current Premier League standings.
+
+Parameters
+Cancel
+Name	Description
+skip
+integer
+(query)
+0
+limit
+integer
+(query)
+20
+Execute
+Clear
+Responses
+Curl
+
+curl -X 'GET' \
+  'https://elliott888-epl-model.hf.space/standings?skip=0&limit=20' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJleHAiOjE3Nzg5Mjg1MjJ9.LgfQIW35DQRzIgq0hEuNsMjDUti94JcnTvYE_iB6Fxg'
+Request URL
+https://elliott888-epl-model.hf.space/standings?skip=0&limit=20
+Server response
+Code	Details
+200	
+Response body
+Download
+{
+  "success": true,
+  "season": "2025",
+  "data": [
+    {
+      "position": 1,
+      "team": "Arsenal",
+      "played": 36,
+      "won": 24,
+      "draw": 7,
+      "lost": 5,
+      "points": 79,
+      "gd": 42,
+      "Logo": "https://crests.football-data.org/57.png"
+    },
+    {
+      "position": 2,
+      "team": "Man City",
+      "played": 36,
+      "won": 23,
+      "draw": 8,
+      "lost": 5,
+      "points": 77,
+      "gd": 43,
+      "Logo": "https://crests.football-data.org/65.png"
+    },
+    {
+      "position": 3,
+      "team": "Man United",
+      "played": 36,
+      "won": 18,
+      "draw": 11,
+      "lost": 7,
+      "points": 65,
+      "gd": 15,
+      "Logo": "https://crests.football-data.org/66.png"
+    },
+    {
+      "position": 4,
+      "team": "Liverpool",
+      "played": 36,
+      "won": 17,
+      "draw": 8,
+      "lost": 11,
+      "points": 59,
+      "gd": 12,
+      "Logo": "https://crests.football-data.org/64.png"
+    },
+    {
+      "position": 5,
+      "team": "Aston Villa",
+      "played": 36,
+      "won": 17,
+      "draw": 8,
+      "lost": 11,
+      "points": 59,
+      "gd": 4,
+      "Logo": "https://crests.football-data.org/58.png"
+    },
+    {
+      "position": 6,
+      "team": "Bournemouth",
+      "played": 36,
+      "won": 13,
+      "draw": 16,
+      "lost": 7,
+      "points": 55,
+      "gd": 4,
+      "Logo": "https://crests.football-data.org/bournemouth.png"
+    },
+    {
+      "position": 7,
+      "team": "Brighton Hove",
+      "played": 36,
+      "won": 14,
+      "draw": 11,
+      "lost": 11,
+      "points": 53,
+      "gd": 10,
+      "Logo": "https://crests.football-data.org/397.png"
+    },
+    {
+      "position": 8,
+      "team": "Brentford",
+      "played": 36,
+      "won": 14,
+      "draw": 9,
+      "lost": 13,
+      "points": 51,
+      "gd": 3,
+      "Logo": "https://crests.football-data.org/402.png"
+    },
+    {
+      "position": 9,
+      "team": "Chelsea",
+      "played": 36,
+      "won": 13,
+      "draw": 10,
+      "lost": 13,
+      "points": 49,
+      "gd": 6,
+      "Logo": "https://crests.football-data.org/61.png"
+    },
+    {
+      "position": 10,
+      "team": "Everton",
+      "played": 36,
+      "won": 13,
+      "draw": 10,
+      "lost": 13,
+      "points": 49,
+      "gd": 0,
+      "Logo": "https://crests.football-data.org/62.png"
+    },
+    {
+      "position": 11,
+      "team": "Fulham",
+      "played": 36,
+      "won": 14,
+      "draw": 6,
+      "lost": 16,
+      "points": 48,
+      "gd": -6,
+      "Logo": "https://crests.football-data.org/63.png"
+    },
+    {
+      "position": 12,
+      "team": "Sunderland",
+      "played": 36,
+      "won": 12,
+      "draw": 12,
+      "lost": 12,
+      "points": 48,
+      "gd": -9,
+      "Logo": "https://crests.football-data.org/71.png"
+    },
+    {
+      "position": 13,
+      "team": "Newcastle",
+      "played": 36,
+      "won": 13,
+      "draw": 7,
+      "lost": 16,
+      "points": 46,
+      "gd": -2,
+      "Logo": "https://crests.football-data.org/67.png"
+    },
+    {
+      "position": 14,
+      "team": "Leeds United",
+      "played": 36,
+      "won": 10,
+      "draw": 14,
+      "lost": 12,
+      "points": 44,
+      "gd": -5,
+      "Logo": "https://crests.football-data.org/341.png"
+    },
+    {
+      "position": 15,
+      "team": "Crystal Palace",
+      "played": 36,
+      "won": 11,
+      "draw": 11,
+      "lost": 14,
+      "points": 44,
+      "gd": -9,
+      "Logo": "https://crests.football-data.org/354.png"
+    },
+    {
+      "position": 16,
+      "team": "Nottingham",
+      "played": 36,
+      "won": 11,
+      "draw": 10,
+      "lost": 15,
+      "points": 43,
+      "gd": -2,
+      "Logo": "https://crests.football-data.org/351.png"
+    },
+    {
+      "position": 17,
+      "team": "Tottenham",
+      "played": 36,
+      "won": 9,
+      "draw": 11,
+      "lost": 16,
+      "points": 38,
+      "gd": -9,
+      "Logo": "https://crests.football-data.org/73.png"
+    },
+    {
+      "position": 18,
+      "team": "West Ham",
+      "played": 36,
+      "won": 9,
+      "draw": 9,
+      "lost": 18,
+      "points": 36,
+      "gd": -20,
+      "Logo": "https://crests.football-data.org/563.png"
+    },
+    {
+      "position": 19,
+      "team": "Burnley",
+      "played": 36,
+      "won": 4,
+      "draw": 9,
+      "lost": 23,
+      "points": 21,
+      "gd": -36,
+      "Logo": "https://crests.football-data.org/328.png"
+    },
+    {
+      "position": 20,
+      "team": "Wolverhampton",
+      "played": 36,
+      "won": 3,
+      "draw": 9,
+      "lost": 24,
+      "points": 18,
+      "gd": -41,
+      "Logo": "https://crests.football-data.org/76.png"
+    }
+  ]
+}
+Response headers
+ access-control-allow-credentials: true 
+ content-length: 2938 
+ content-type: application/json 
+ date: Fri,15 May 2026 10:51:41 GMT 
+ link: <https://huggingface.co/spaces/elliott888/EPL_Model>;rel="canonical" 
+ server: uvicorn 
+ vary: origin,access-control-request-method,access-control-request-headers 
+ x-proxied-host: http://10.112.41.223 
+ x-proxied-path: /standings?skip=0&limit=20 
+ x-proxied-replica: 7z2wpau8-bpmtm 
+ x-request-id: g9POym 
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+"string"
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string",
+      "input": "string",
+      "ctx": {}
+    }
+  ]
+}
+No links
+
+GET
+/top-scorers
+Get Top Scorers
+
+
+Retrieve current Premier League top scorers.
+
+Parameters
+Cancel
+Name	Description
+skip
+integer
+(query)
+0
+limit
+integer
+(query)
+20
+Execute
+Clear
+Responses
+Curl
+
+curl -X 'GET' \
+  'https://elliott888-epl-model.hf.space/top-scorers?skip=0&limit=20' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJleHAiOjE3Nzg5Mjg1MjJ9.LgfQIW35DQRzIgq0hEuNsMjDUti94JcnTvYE_iB6Fxg'
+Request URL
+https://elliott888-epl-model.hf.space/top-scorers?skip=0&limit=20
+Server response
+Code	Details
+200	
+Response body
+Download
+{
+  "success": true,
+  "data": [
+    {
+      "name": "Erling Haaland",
+      "team": "Man City",
+      "goals": 26,
+      "assists": 8,
+      "played": 35
+    },
+    {
+      "name": "Thiago Rodrigues",
+      "team": "Brentford",
+      "goals": 22,
+      "assists": 1,
+      "played": 36
+    },
+    {
+      "name": "Antoine Semenyo",
+      "team": "Man City",
+      "goals": 16,
+      "assists": 4,
+      "played": 35
+    },
+    {
+      "name": "João Pedro",
+      "team": "Chelsea",
+      "goals": 15,
+      "assists": 5,
+      "played": 34
+    },
+    {
+      "name": "Viktor Gyökeres",
+      "team": "Arsenal",
+      "goals": 14,
+      "assists": 1,
+      "played": 34
+    },
+    {
+      "name": "Dominic Calvert-Lewin",
+      "team": "Leeds United",
+      "goals": 13,
+      "assists": 1,
+      "played": 33
+    },
+    {
+      "name": "Danny Welbeck",
+      "team": "Brighton Hove",
+      "goals": 13,
+      "assists": 1,
+      "played": 35
+    },
+    {
+      "name": "Morgan Gibbs-White",
+      "team": "Nottingham",
+      "goals": 13,
+      "assists": 5,
+      "played": 35
+    },
+    {
+      "name": "Eli Kroupi",
+      "team": "Bournemouth",
+      "goals": 12,
+      "assists": null,
+      "played": 36
+    },
+    {
+      "name": "Ollie Watkins",
+      "team": "Aston Villa",
+      "goals": 12,
+      "assists": 2,
+      "played": 35
+    }
+  ]
+}
+Response headers
+ access-control-allow-credentials: true 
+ content-length: 841 
+ content-type: application/json 
+ date: Fri,15 May 2026 10:51:54 GMT 
+ link: <https://huggingface.co/spaces/elliott888/EPL_Model>;rel="canonical" 
+ server: uvicorn 
+ vary: origin,access-control-request-method,access-control-request-headers 
+ x-proxied-host: http://10.112.41.223 
+ x-proxied-path: /top-scorers?skip=0&limit=20 
+ x-proxied-replica: 7z2wpau8-bpmtm 
+ x-request-id: 46MS_H 
+Responses
+Code	Description	Links
+200	
+Successful Response
+
+Media type
+
+application/json
+Controls Accept header.
+Example Value
+Schema
+"string"
+No links
+422	
+Validation Error
+
+Media type
+
+application/json
+Example Value
+Schema
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string",
+      "input": "string",
+      "ctx": {}
+    }
+  ]
+}
